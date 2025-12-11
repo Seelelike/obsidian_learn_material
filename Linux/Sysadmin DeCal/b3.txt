@@ -1,0 +1,272 @@
+Linux SysAdmin Decal b3: Shell Scripting
+Subtitle
+hey everyone so welcome to the third lecture of the linux sysadmin decal
+my name is richard and i'll be your lecturer for today and
+today's topic is shell scripting so quick reminder right before we start is
+course resources you have your facilitators
+we're always here to help so please ask us any questions if you have any
+all the material new and old is online and feel free to join in the in-person
+lecture time at 8pm pst in the link provided and yeah
+email us and drop by in the slack if you have
+anything to talk about also engaging with this
+lecture just because it's remote you can follow along at ocf dot io slash decal
+slash slides slash b3 or and uh if you don't have a terminal
+you can always connect through the ocf servers and if you have any
+questions again please ask so yeah topics for today we have bash
+variables conditionals loops functions and streams and then
+afterwards i'll be showing some of my favorite examples
+of bash scripting and how they've helped me and some pretty
+awesome examples so yeah so what are we learning bash scripting that's a good
+question let's pretend for hot moment that uh
+your ace assignment and as a cis admin you type a lot of commands right you do
+a lot of things and
+you're a little lazy you know you don't want to like type the same command over
+and over again you want to stay dry you know
+so that's why uh bash scripting allows you to basically tell the computer to do
+it for you so you basically use batch scripting
+to tell the computer a set of instructions step by step
+and then let the computer do the dirty work for you
+um this is the relevant xk cd comic and so optimally we would basically have
+the computer do the some of the automation for us and
+that should basically help increase our free time at
+least that's what we hope to do uh but yeah so let's start with bash
+so most of you have probably used bash as a shell but did you know
+it's also a programming language and to get started with that
+really quickly let's go through the basics so how to write a comment bash
+comments in bash are basically just pounds or sharps or hashtags whatever
+you want to call it and on the right you can see an example
+and shebangs so shebangs are special comments that
+appear at the beginning of a shell script and they come in with
+a bang and an exclamation mark and then
+the path to the interpreter and this basically tells the program uh
+what to use to execute the lines below and so
+for the most part in our case we'll be using slash bin slash bash
+and also to run your script don't forget to make an executable by doing chmod
+plus x the name of your script and to actually
+run your script you just do dot slash and then your script name
+cool and then we can do a quick hello world demo just to make sure everything
+just make sure everything is set up
+folder … cool and i'll be using vim as my text editor feel free to use vs code
+emacs nano whatever you want but yeah so don't forget to
+do the shabang i'm going to write quick hello world
+echo hello and that should be let's call this hello world sh and that
+should be your first script and you can see it
+right there hello or the sh so don't forget to make it executable
+and now you can actually run it hello world
+congratulations you have written your first shell script
+and yeah let's get on to basics with variables so
+variables are pretty simple they're kind of like the same you just have the
+variable name on the left side equal sign and then the value of the
+variable on the right side and in this case in bash white space actually
+matters so please don't put spaces in between the
+equal sign unless you know what you're doing and to actually use the variables
+you just do dollar sign and then the variable name
+so going back to example we can basically do say name
+is equal to richard echo … echo
+the name and so if we execute this suggestion it should just
+say my name and it does so sweet and if you want to do uh addition you
+gotta be kind of careful because bash variables are untyped so in this
+case v equals one fluid plus one what do you think this
+will do
+this actually errors and the reason is because operations are contextual
+so if you actually want to do math like this you'll have to use the expression
+command to actually evaluate expressions so in this case this instead of that
+this instead of that is a valid command just remember to use
+that so yeah and if you want to read in user input you can also do that
+with the read command so you basically do read and then the
+variable you want to write into from the input
+and the dash p is just an optional prompt to prompt the user so for example
+if you don't want to hard code my name you can say
+read p enter your name and then you want to read this into
+the name variable so don't say empty your name you type in
+richard and it'll output richard … sweet all right
+let's learn about sub shells so subshells are basically uh
+help you do command substitution which basically replaces the actual text of
+the command with the command's output so in this case um i can just
+do like name is equal to the subshell which basically lists all the contents
+in the current directory and then i'll just echo out
+the contents of the quick directory and if this works and it does oh my face
+my face is blocking let's do that again if it works you'll see all the files
+inside the current directory cool all right
+conditionals how do we test stuff so to evaluate an expression use the test
+command and this is also synonymous with the uh
+brackets which i will show later but just keep in mind that the test
+command will output zero if things are true and one if things are false and yes
+that is correct zero is true and one is false in this
+case just just keep that in mind uh yeah and so
+there are a lot of comparators and they're pretty straightforward if
+you know how to read them you know equals not equals greater than greater
+than or equal to less than less than or equals to
+and there's a bunch of other stuff like is a directory is a file or not but i
+won't get into those so yeah let's look at this example
+quickly what do you think this will output and as just
+as a reminder the dollar sign question mark just echoes out the status of the
+previous command
+and the answer is uh it will output zero and one because the first one zero
+equals zero started out with zero which means true
+and the second one zero is not equal to one so it outputs one which means
+false and you can also write this in shorthand like i said earlier
+with brackets so this is a lot shorter and somewhat neater and following off
+with this you can actually do if statements now so you can do if the
+condition then the actual thing you want to do and
+remember to end it with f i or the opposite of if so in this
+case let's do a quick one um … so you can say if uh
+name is equal to oops richard
+then … uh hey there everybody
+all right let's try that so this should echo
+and if i change my name to something like
+kevin … nothing should happen because we're not
+inside the if statement yeah you can also do else statements so if
+else and you can also do things like alifs which are basically just else if
+it's kind of like python so if l if else and just make sure you put the
+then keyword after the if statements cool
+and uh if you're getting really long there's also things called case
+statements that you've probably used before in
+other languages it's just a little uh it's a little wonkier
+in bash so you can see here that the um the … parentheses actually end
+the conditions and the semicolons are actually the end statements uh but
+yeah i won't be getting into those too much
+but do remember to end the case statements with esac
+because that is the opposite of case all right let's move on to loops so we
+all know about four loops right and it's a little like python
+where you can do like four variable in the iterable and then
+do echo or do whatever you want and i can
+do a quick demo of this out
+so like let's say you have a list that equals
+uh a b c d you do for uh item in
+list … make sure you do and wrap it with done
+echo hi and this will just output abcd and the line
+and you always do um whatever operations you want
+to like hello there let's pretend those list names
+um … hello there and we'll just do hello there a b c d
+yeah that's for loops and oh uh where this could actually be
+very useful is if you're say mass readings for
+example i'll make a quick files directory
+so what i'm doing here is all i did was make
+ten files named one through ten and using this script
+i will rename them all to new dash one new dash two nude actually what not so
+let's first cd into the files directory i just created
+for i in the subshell command that's where we're using it
+that so this just outputs the uh files in the directory
+quickly cool and let's call this f … clarification so we're going to
+go renaming … f to mu dash f … and i'll
+just do the move command here move to new dash
+[Music] and if we run this and hopefully it does
+work um
+oh yeah wrong directory sorry gotta be in the right directory when you run the
+files um yeah you should rename them and if
+you just ls the files directory you can see all
+of them are now renamed to do so that's pretty cool right
+um yeah so for loops are pretty powerful and what you can do like that
+and there's also a while loops so you do while condition
+it's kind of the same thing you'll get the point and let's go on
+so functions functions you can actually write functions in mesh and they're
+pretty cool the only thing to keep track of is that
+you don't actually put the arguments inside of the parentheses like
+most other programming languages but instead you use uh positional arguments
+so like dollar sign one two three and so on and i'll give like a
+quick demonstration … function
+this will just do echo hello there [Music]
+and you just call greek on the first function given to the script
+so in this case we do or actually it might
+be more
+clear … so we do that what do you think will happen
+it should be pretty simple it just creates me right hello there richard
+makes sense cool and yeah you can oh yeah you can do some pretty
+complicated stuff with it uh for example you can actually
+[Applause] function fibonacci right classic
+programming problem so let's do if the first argument
+is less than or equal to one i believe um then echo
+one else okay this might get a little complicated but please
+just follow along uh
+so we want to do some addition with some subshell calls
+so we want to call fib minus one so that's … yeah that's that minus one
+plus … plus fib minus two and
+i think it should be good yeah yeah don't forget
+um … yeah let's let's hope this fire don't forget to call it as well
+i think 55. yeah there you go that's fibonacci
+and yeah syntax and bash isn't exactly the previous
+but it works yeah okay let's go on the streams
+uh let's just review quickly so the carrot symbol the more than or the more
+than simple basically outputs the output of command into a file and i can
+do this quickly for you so let's go hello to file
+and then if i just cut out the file you can see hello is in the file
+and similarly you use the opposite uh caret
+symbol or alligator symbol to basically take input from a file and so
+i actually have you can see here i have moby dick in the text right here
+and what we can do is sort all the lines in moby dick just
+like that boom and yeah it's a really long output but
+they're all sorted uh you can trust me on that and yeah and the most powerful
+one and probably one of my favorites is called pipe it's where you take the
+output of the first command and you pipe it into the input of the second
+and with this you can do some pretty powerful stuff
+um there is a story about two two programmers uh one named newth and
+one named kilroy where they were tasked with writing a
+writing a program to find the n most frequent words in an article and uh so
+newth basically wrote like this 10 page plus
+pearl script and it was you know it was really low level implementation they
+were like tried into structures and stuff
+and then i believe mickey elroy basically just took this and wrote it
+in a few lines of simple bash and i can actually
+try that right now … if i if i remember how so what we're going to
+do is basically we're going to take in the input
+and we are going to split all the lines as you can see on the right all these
+lines into individual words you're going to take the complements of anything that
+is not a word and replace it with a new line
+new line and then we're also going to lower case it just for fairness sakes
+and i want to sort it and then once we sort it we're going to do is
+unique which basically um it replaces all the duplicates with only
+one and the dash c flag tells us how many duplicates there are
+i'm going to store it again in reverse uh numerically
+and then we're going to output the the first argument amount of
+the ones that we want and so with this we have written what is this
+five we can't kept today six lines um of stuff so cat moby dick
+can't say it's cat movie dick to hello world and let's say we want like the
+first line the most frequent word and so this case
+it's just the and if we want like 10 we pass a 10 and see all 10 of the most
+recent words so yeah this is this is basically what the essence
+and probably the magic of the shell is is that you can basically change the
+chain these different programs to work together to achieve
+whatever sort of goal that you have instead of writing a really complex
+algorithm or program to do it um yeah that's
+how pipes are really powerful uh yeah and just some additional notes um
+as you saw before writing fibonacci in bash isn't exactly
+the best which is why python you can actually write
+shell scripts in python as long as you change the interpreter to python you
+write in python because python has some pretty cool
+stuff like arc parts fabrics salt psu till
+and you're able to basically do some pretty
+uh a lot of heavy lifting with that you know complex data structures
+recursion oop and i'd say honestly use bash when
+the functionality that you want is basically easily expressed as a
+composition of command line too it's kind of like the one over here as you
+saw um and yeah uh right before we end i can
+actually show some things for some examples um
+i wrote a script called let me see if we can find it quickly
+um i wrote a script called chive because back in 61c i had a project where i was
+supposed to do um i believe it was performance
+programming of like neural nets and we're supposed to benchmark it on the
+hive machines but with everyone in the class
+benchmarking um a lot of computers were used up in
+the hive so i wrote a script to basically
+get me the least used high for the high for
+the high machine with the least amount of users and i think i can actually show
+this in action um yeah so for example
+the dash v just stands for verbose dash u stands for user and so over here you
+can see that i have logged into hive 22 and we
+can see how many users are in each one so this script basically just compiled
+all this and logged me into the one with the least amount of users and
+oh wow that's a lot of users in high one but yeah so
+shell scripting is pretty useful i also use it personally for everyday tasks
+such as some of my scripts i have like some backup scripts
+because i'm lazy i don't like writing uh this really long command with lots of
+flags and i also have some stuff for like
+backing up to decrypted disks and stuff like that
+um but yeah also recruiting you know but yeah
+shell scripting really powerful helps you
+do lots of stuff and helps you stay dry and these are some other resources you
+can take a look at there's the new thin mcgilroy word count thing i talked about
+there's the bash guide for beginners from the linux documentation project
+and there's a really interesting video on the unix operating system if you're
+going to watch about it but yeah google's your best friend good
+luck out there and thanks for watching

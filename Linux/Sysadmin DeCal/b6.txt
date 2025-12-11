@@ -1,0 +1,240 @@
+Linux SysAdmin Decal B6
+Subtitle
+all right hi good afternoon everyone my name is ran Chan and today we're going
+to be talking about processes Linux system vcal electri
+B6 so let's get right into it what is a process so process is a singular
+instance of a program being executed it has a p ID which is process
+ID a numerical identifier assigned to it along with some other metadata such as
+resource usage information um security information process owner stuff like
+that and anything that you would think of as running is probably a process you
+know there are there are some exceptions some different cases there are Services
+which are kind of more advanced background processes that we'll be
+talking about next lecture but for the most part anything that you would be
+running directly from your shell is probably a process for example as Vim
+ping instances of these programs would be
+processes so where do processes come from so
+broadly speaking with exactly one exception processes come from other
+processes when a process creates other processes we call the originator the
+parent process and then the newly created process the child process so
+this results in kind of a tree like hierarchy forming among the processes at
+the the very root node of this this tree the one
+the the Run process where everything else originates from we have init so
+init is going to be the first process that's run on Startup started by the
+kernel you don't have to know anything that that happens before
+this so this process is assigned to P1 as it is the first process that
+starts and there are a few different types of init systems the most common
+one that you will probably be running into is going to be system D but there
+are a few others and for the purposes of processes they can be treated mostly the
+same so here we have some commands that will allow you to look at processes and
+get some get some information about them so we have PS very simple basic prints
+running processes there Litany of different options you can check it out
+in the manual here are some of the more common ones uh we have print all
+processes print extra information print a
+tree um then we have kill pkill these are commands that'll send a signal to a
+process that'll end it more on signals in a few different few slides PP I
+believe grap was covered in the previous lecture P grap same thing just searches
+processes then you have htop which is kind of a
+nice graphical overview of of all the processes that are running gives you
+proc statistics you can interact processes send signals very handy tool
+so let's take a look at htop right now so here's an example output of
+htop as you can see at the top we have some resource statistics um some
+metadata type stuff uh the memory being used that kind of General system
+information then if you look at the bottom 2/3 we have the processes what
+we're here for so as you can see in kind of the
+lower right hand quadrant it's arranged into a tree like format and this tree
+format is indicative of the hierarchy we were talking about earlier um it
+indicates what a child and a parent process so let's zoom in on a little bit
+this is also another view of htop is just condensed a little bit uh blown up
+into just the information we want so here on the left we can see PID
+PID um and then you have the command that is being run so the first row we
+have P1 this is going to be our init we have system D pretty
+standard um and then below that we have three rows that are involved with
+SSH now the these are Damons these are running in the background and we'll
+it'll be covered a bit more in the next lecture but the main thing you need to
+know is that the these three processes right here in the hierarchy are just SSH
+because this is this is me sshed into into the
+machine so below the SSH we have we have bash when you ssh in and I started a
+bash terminal then below that we have htop
+because I ran htop the command from Bash from the
+shell so signals signals are a way of controlling
+processes they are kind of a way of interacting with the processes not only
+can you send signals but other processes can also send signals to
+processes so the first four first four process I mean first
+four signals that we have listed out here
+are I guess you could think of them as being
+more process control signals so all right to preface this there's a lot of
+different signals these are just a subset of a few important ones the four
+that are in Gray here have behavior that is defined by the process itself so if
+you send one of these signals to a process the process defines the behavior
+on how it's going to deal with that how going respond to that it could even just
+ignore it entirely so first off we have Sig term
+which is you just tell a process to to exit pretty standard Sig in Signal
+interrupt uh this is what you send when you press control C on the keyboard
+interrupts largely does the same thing Sig term uh signal hangup this is what
+happens when you when you log off when you close the terminal window uh it has
+some some special behavior that we'll talk about a little bit later Sig child
+this is also something we'll be talking about in the next slide this is what
+this is telling a process that it needs to collect data on its child
+processes so now we're going to be getting into these red signals now these
+red signals are in red because they're kind of more more serious
+signals they they aren't just telling the press
+to do something they you are invoking the operating
+system to to do something directly so Sig kill this will kill a process and
+the process just has no say in the matter uh it's not like Sig term where
+you where you're asking a process to stop sigkill you just you you stop it
+it's just being stopped um so typically you want to try to use the the lighter
+versions of these earlier because you know proces have Behavior they like to
+follow they try to clean up stuff and that can't happen if you're just killing
+it directly but sometimes it's necessary so you have Sig stop here uh
+this will suspend a process you press control Z Sig con resume a
+process and cannot be handled and then these signals can also be sent with
+these kill pill kill all commands um and then these signals can also be sent with
+htop if you press I believe it's F9 the buttons are on the bottom but you can
+select which s which signal you like to send to which process very nice command
+everyone low stage
+up so now going back into the life cycle of a process a
+bit so first off what happens when is a process is created it is it's
+typically forked off from a parent process um so the process is born it has
+its parent and it is the child of that parent at this point the process is
+assigned a p and the operating system will begin tracking the processed info
+so this includes the the metadata that that kind of stuff that we're talking
+earlier so nextly the bulk of the life cycle process of doing whatever supposed
+to be doing hopefully uh not always then eventually the process is
+going to come to an end whether that usually that is something that is
+happening of its own poition hopefully now after the process ends the
+operating system continues to hold on to the resource info the PID and the
+termination status code for the process so as soon as the process ends
+if you were to somehow look at the list of processes right at
+that moment the PID and all that stuff would still be
+there so what happens now is the operating system sends a Sig child
+signal to the parent process and that informs the parent that the child
+process is ended and that the info is there to be collected the info that we
+just talked about then the parent process collects that data by calling
+what's called a weight function it is the responsibility of a parent process
+to collect this data um it can just throw it out but it is important that
+the parent process either acknowled just acknowledges that it has that it has
+seen this this data so after the the parent process has
+done this then the OS will just release all the remaining data the P ID is
+released and at that point it's it's completely
+done
+so zombie processes now what happens if a child process ends but the parent
+function does not collect the data that the OS is keeping about the child well
+in this case the child process it's going to remain in the process table
+it's going to have all that data the termination code all that it'll just be
+it'll be stored there indefinitely this is known as the zombie
+process the child process kind of died but the parent process is not
+reap the child it has not cleaned up the the corpse so to
+speak now it's not a huge deal the memory impact is low but you do
+generally want to to avoid these
+things now let's get to kind of the opposite
+situation orphan processes so what happens to a CH what
+happens to the children of a parent process if the parent process ends
+before its children do well in this case the child processes
+are reparented or adopted by pid1 they no longer have the the parent
+they previous did because that parent no longer exists and these are known as
+orphan processes the naming is somewhat straightforward
+here so let's get to the case where you have process that is both that are both
+zombies and orphans at the same time well it'll still get sent to to P1 it'll
+still be an orphan process it'll still get get adopted by
+P1 um however it probably won't won't stay there as a zombie forever the in it
+systems will periodically clean up the their children that are
+zombies so sometime sometimes processes will mess up and they'll they'll have
+zombies but once it goes to AIT you can you can reliably count on AIT to to
+clean up it's it's zombie processes that are as
+children so process iio we talked a little bit about signals earlier and
+signals they they provide a certain level of communication with processes
+but it's you have a limited amount of information that you could send it's
+really just sending like a new single number to the proc
+so for processes process IO every process is initialized with three opit
+file handles also known as streams standard in which is where
+process looks for input standard out where processor can write output and
+standard error where process can write
+errors so let's take a look at a few few examples this will be a better riew so
+first one or Echo something um by default if you're running something from
+from a terminal from from a shell the standard output is going to
+just be printing into into that shop so if you Echo here it's going to it's
+going to Output this to standard out and standard out in this case is going to
+just be print get out this is the same the exact same
+thing is going to happen on the second row here
+now on third row here you're going to be writing to standard error as well as the
+terminal that's because of this guy right over here on the side what this
+does that it means that you are also going to be
+sending to this best Swip Stream So number two represents standard error
+number one represents standard out
+so going down further let's say we're running a program uh we can choose to
+where we want to send both standard out and where we want to send standard
+error now you may not be familiar with this
+notation so if you emit the number it
+automatically assumes that you're that you want to that you're talking about
+standard out so you've probably seen the program message something like that and
+then the what is it less than symb greater than
+symbol I don't know sent and then you you've seen it sending to a file or
+something so in that case if you did not put a number in it's assuming that
+you're sending it to to a I'm assuming you're sending it
+you're sending standard out to wherever it is and then of course you can send
+standard error to duplicate it and send it to standard
+out then standard in is is represented by by doing the the opposite sign
+there so background processes background Pro you don't want
+you don't want to be running everything in a bad in a shell all the time I mean
+it's just the reality of of how things work
+so sometimes you want things to be non-interactive you want them to be
+running in the background on the shell you can do this
+by appending an aand to the end of a command it's important to note that
+standard out and standard error are still inherited from the parent shell uh
+so only standard in is detached let's say you have a
+command say you have a ping or something like that and you're detaching it you're
+still going to get the output printed onto the shell because that process
+still has a standard out and standard error of the
+shell however you will not be able to to to write anything to it or with your
+keyboard because standard in is not going to be attached to the Shell which
+is where you are so these processes when you when you
+have them be a background process they're still Children of the current
+shell what that means is that when a shell
+receives a signal hangup which happens when you lock out it's also going to
+send a signal hangup to each of his children which is going to terminate
+them so here you have process that are running in the background but as soon as
+you close the shell they're going to be going
+away now let's say that we want to take it a step further let's say we want to
+have a process that that's running and we want to persist even after even after
+we log
+out now some people might say just run it in t-mo and that that is certainly a
+thing that you can do and that is that's kind of making use of some Concepts
+that'll be covered in next lecture but let's let's talk about the more a more
+basic level jobs so jobs are the child processes that the shell is taking
+responsibility for it's not really a a broad Universal Unix concept it's more
+specific to shells and pretty much every shell is going to have some kind of
+concept of of this of jobs so there's command very simple called jobs see what
+child processes of the shell are running in the background running after you use
+the the Ampersand then if you want to disconnect
+the process from the shell a little bit you can run the disown command
+um now I know we've been talking about that this hierarchy of parents and
+children processes
+and you you might think that this own will remove it as a child however
+it when you send when you run disown these processes still belong still are
+children of the shell and that's that important in certain
+scenarios so a bit of misnomer what this will do is it will will prevent the
+shell from sending the process signal hangup when it otherwise would so what
+that means that the the process still going to be a child of the shell that
+ran it till the shell is closed at which point the process will be orphaned
+because the shell will close as it weed a signal hang up but this process the
+disowned process will not receive the single hang signal hang up and it'll
+just keep on chugging along so it'll be orphaned sent to P1 and it'll
+continue now very important note when this happens with dis own this
+will not change the standard in standard out or standard error of the process so
+if you have one of the streams that are pointing at the Shell and the shell gets
+closed the process is probably going to error out because it's standard out
+destination does not exist
+so a few more things that you can do with jobs um let's say you have an
+example you're pinging
+pinging ocf Berkeley U probably going to be up hopefully if it's not up send this
+message um you type control Z and that'll suspend the process using the
+signal stop that we discussed earlier then you can see that process
+listed when you run the jobs command run BG to have the process remove in the
+background or FG to bring it to the foreground let's say that you have
+something you want running in the background but you want a bit more bit
+more control about it on it you want you want to manage it a bit more you want to
+have it be running all the time like on Startup or something like
+that well that is a job for services which is going to be covered next time
+um if you have any questions about this lecture feel free to message me
+pza email anything like that and yeah thank you for your time and
+attentiveness

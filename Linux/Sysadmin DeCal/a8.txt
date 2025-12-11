@@ -1,0 +1,154 @@
+Linux Sysadmin Decal a8: Config Management
+Subtitle
+Ja (Thanakul) Wattanawong: Alright.
+Ja (Thanakul) Wattanawong: For everyone listening to the recording recording
+Ja (Thanakul) Wattanawong: Welcome. This lecture is going to be on conflict management. My name is john
+Ja (Thanakul) Wattanawong: quick introduction of myself. I'm I am one of the current OC of site managers. So that means that like I basically like make sure that everything stays up and that we're building out new things.
+Ja (Thanakul) Wattanawong: And making sure it's all good. And yeah, and dealing with issues that pop up time over time. I'm an ex major I
+Ja (Thanakul) Wattanawong: Were all kind of like firefighters in a way because and that's kind of the term because um you know things break and you have to go crap. The fire. Sometimes the fires big sometimes it's small and sometimes there's just like an eternal fire like California
+Ja (Thanakul) Wattanawong: I'm going to serve your student VM. And I've been answering questions about those in like decal general and if you've had issues with them.
+Ja (Thanakul) Wattanawong: I probably like fix them. So, and a lot of it is usually because conflict management and we have that. And it makes it easy catch me in the OCR shows for discord from time to time.
+Ja (Thanakul) Wattanawong: All right, well let's just jump right into it. I don't expect this lecture to be long, we're like, we're just going to go through like all the
+Ja (Thanakul) Wattanawong: Motivations why we have config management how we use it, how you can use like a specific config management tool that we call puppet.
+Ja (Thanakul) Wattanawong: And the lab is also not very long. And it's the extra credit like optional stuff is really open ended. So hopefully an easy week if you like had a heart rough week this week with midterms and all the news coming lately.
+Ja (Thanakul) Wattanawong: So alright so what what promises conflict management soul.
+Ja (Thanakul) Wattanawong: Oh yeah, feel free to interrupt me with any questions or you want me to clarify things. So what does it solve
+Ja (Thanakul) Wattanawong: So suppose you have a bunch of computers the CF has like on a number of like 10s of servers, like actual physical servers and around like 29 desktop computers.
+Ja (Thanakul) Wattanawong: You suddenly decide that every single one of these desktops need needs Minecraft installed. So, um, how would you do it, what tools do have so far. Um, so far, like you think right okay um we can SSH into it run W get run curl and put Minecraft at a right directory and install it manually.
+Ja (Thanakul) Wattanawong: So still kind of automated right
+Ja (Thanakul) Wattanawong: Even with a script. This still kind of sucks.
+Ja (Thanakul) Wattanawong: Like if you want to upgrade the version of Minecraft. How do you do that if you want to, like,
+Ja (Thanakul) Wattanawong: If you want to, like, you know, ensure that Minecraft is all the same. How do you make sure that, you know, nothing's gone. I'm like, you know, like someone breaks a desktop. How do you make sure Minecraft is still on it. So the problem is how do you deploy updates to existing computers.
+Ja (Thanakul) Wattanawong: Another problem we can new computer
+Ja (Thanakul) Wattanawong: This specific computer is supposed to be a really powerful desktop that we bought. It's the cases kind of tacky, but we were going to put like five GPUs in it. But let's say we bought this thing.
+Ja (Thanakul) Wattanawong: Remembering, you know, like we installed Minecraft. Right. And then we saw like hundreds of other software that make it an OCR lab desktop so remembering to install. Everything is very difficult.
+Ja (Thanakul) Wattanawong: And making sure that all the like all the configuration files are the same. And, you know, the whole experience is the same. How do you provision new machines.
+Ja (Thanakul) Wattanawong: Another problem. Suppose that you're running a Minecraft server and you realize you know you can testing.
+Ja (Thanakul) Wattanawong: Maybe you change, like, you know, the maximum amount of memory. Maybe you changed on how wide like the it renders the
+Ja (Thanakul) Wattanawong: One. I don't remember what Minecraft settings. There are these days. But how do you figure out what settings you have changed around that time. And how do you make sure they keep in sync between all all of your Minecraft servers.
+Ja (Thanakul) Wattanawong: So if you want to like keep changes like consistent between like various like computers. How do you make sure that they're all consistent
+Ja (Thanakul) Wattanawong: And so, um, I guess, just as a quick aside, like the term config management. Now you've seen like these three problems I'm conflict management really refers to, like,
+Ja (Thanakul) Wattanawong: You know, first, making sure that you can communicate changes to various on computers.
+Ja (Thanakul) Wattanawong: And then making sure that when you like bring in a new system. You make sure it's its configuration its state is consistent and same with what you want it to be.
+Ja (Thanakul) Wattanawong: And also, um, if you ever. If you ever change things. You want to make sure that everything it's essentially like kind of a feedback system, making sure that the configuration of every single computer is the same that you want it to be so conflict management.
+Ja (Thanakul) Wattanawong: You could. So if you think about like the kind of language that you should specify like configurations and um, you know, in
+Ja (Thanakul) Wattanawong: Doing it as code is not a bad idea. So if you think about
+Ja (Thanakul) Wattanawong: If you've never seen you may have never seen this language report, but this kind of makes sense, right, you have a list of packages that you want.
+Ja (Thanakul) Wattanawong: You put a Minecraft launcher in there and some kind of software will make sure that that Minecraft launcher is installed on every single computer and it like as a package.
+Ja (Thanakul) Wattanawong: So how does this solve our problems. So it's really easy. Um,
+Ja (Thanakul) Wattanawong: Now it's simple, because we add that line Minecraft launcher and everything and supposedly the thing that reads from that line configuration. There's a unified update mechanism there it just reads the list of packages and install them all.
+Ja (Thanakul) Wattanawong: But that's platforms problem one for problem two of bootstrapping now that we store all these changes in this is GitHub, um, it's really easy to communicate new changes to new computers because
+Ja (Thanakul) Wattanawong: Everything's in a central location you just read off like that single source of truth. And when you if you plug into your computer you can apply that new configuration.
+Ja (Thanakul) Wattanawong: Probably pretty as I'm communicating new changes is really easy because
+Ja (Thanakul) Wattanawong: You can use standard development practices like get, you know, people can make pull requests. They can be like, hey, I want to install this new software.
+Ja (Thanakul) Wattanawong: Here's the code. I'm going to add Minecraft launcher to it and then we can take a look at it. We know what it's going to change. And we can like apply that and it's just a really clear way to describe what you want.
+Ja (Thanakul) Wattanawong: Which is a lot less more less abstract
+Ja (Thanakul) Wattanawong: So Minecraft is a pretty simple example. But let's say you're building out a really complicated like software install like you know you've got things that like take five calm five packages to install any better.
+Ja (Thanakul) Wattanawong: Manage like 10 config files and you're telling us you want to install it and I'm going to do X and X. It's much easier to put into puppet.
+Ja (Thanakul) Wattanawong: And then be like okay so this is everything that is going to happen. And then you see it immediately.
+Ja (Thanakul) Wattanawong: Um, so kind of a working definition that will be working with in terms of content management is software that makes it easy as possible to boot up new machines.
+Ja (Thanakul) Wattanawong: Configure running software and allows configuration to be stored as code as in like configuration as code or if you've heard of infrastructure as code philosophy.
+Ja (Thanakul) Wattanawong: So there are two primary like like kind of like
+Ja (Thanakul) Wattanawong: Philosophies or like paradigms of configuration management that are popular today.
+Ja (Thanakul) Wattanawong: And the first one is imperative. So this is getting kind of more theoretical, but I think you're going to get to see like how different software like use these paradigms. So imperative is just like the programming language imperative. It's a sequence of steps.
+Ja (Thanakul) Wattanawong: Popular tools like answerable and chef. Whoa, you will specify like a playbook that says, like, step one. Install Minecraft step to edit server that properties. And then step three. Start Minecraft.
+Ja (Thanakul) Wattanawong: So, so
+Ja (Thanakul) Wattanawong: Updates are handled a little differently. So these are, it sounds like really like intuitive but wonderful conflict files already edited. So a little more complicated.
+Ja (Thanakul) Wattanawong: They're always so you're like each of these like methods have each of these paradigms have their own ways of like solving like these issues where because what we really want is the second version like kind of a declarative state so
+Ja (Thanakul) Wattanawong: Declarative means that you specify the final state and the system works to get self into that state.
+Ja (Thanakul) Wattanawong: I guess a relationship would be like when they teach you sequel and 61 a. They're like, oh, you know, the sequel engine figures out how to get there and you just tell it what kind of data you want
+Ja (Thanakul) Wattanawong: So this is pretty similar. You just specify I want this package installed and puppet, which is the software. We're going to be working with
+Ja (Thanakul) Wattanawong: You know, use a Minecraft launcher puppet figures out how to get Minecraft launcher installed and present onto your system.
+Ja (Thanakul) Wattanawong: And in this case, it's all just one single feedback loop on the updates are the same as the bootstrapping process, whereas in like the imperative like processes. Um, it's a little more complicated and
+Ja (Thanakul) Wattanawong: You can go read up on like how they handle that. This is really just like kind of to get you to understand the difference between these two philosophies and, of course, like it's not like the software is powerful. Most configuration software will do both kinds
+Ja (Thanakul) Wattanawong: Because it's, it makes it more powerful, but usually like their main philosophy will be one of the two
+Ja (Thanakul) Wattanawong: Alright, so let's get into puppet is the software that like the OC of users and the one that we're going to be talking about the most
+Ja (Thanakul) Wattanawong: It's pretty popular
+Ja (Thanakul) Wattanawong: It relies on like the declaration of paradigm and it can be imperative when necessary.
+Ja (Thanakul) Wattanawong: I can show some examples of this at the end. But you, for now, you should consider puppet as being like a funny like mostly declarative.
+Ja (Thanakul) Wattanawong: It was so the code that we've been talking about. Originally it was based on Ruby, but now it's become like the puppet language. So it's got a Ruby like syntax, but it's become what we call our domain specific language. So you're learning how to write puppet code. We use it.
+Ja (Thanakul) Wattanawong: uses it to provision their vagrant boxes that you get to run your Pintos and if anyone's taken that class Wikimedia uses it, and companies like GitHub and lift.
+Ja (Thanakul) Wattanawong: So the
+Ja (Thanakul) Wattanawong: Puppet uses a pull model where
+Ja (Thanakul) Wattanawong: You know, we take home agents. The agent on like, you know, a desktop asks for an update from the puppet master.
+Ja (Thanakul) Wattanawong: So that's why, like puppet is usually just scheduled to run as like a cron job, you know, every now and then and at the OC. If it's every 30 minutes that desktops will ask, is there an update from me. Is there an update for me.
+Ja (Thanakul) Wattanawong: Until you know
+Ja (Thanakul) Wattanawong: The end of time.
+Ja (Thanakul) Wattanawong: So we're just gonna like go a little bit like, do a little bit of a deep dive into puppets architecture for at first. Does anyone have any questions.
+Ja (Thanakul) Wattanawong: Okay.
+Ja (Thanakul) Wattanawong: Okay, so yeah, we're just going to do a little bit of a kind of a like deep dive into how a puppet run works and how it gets all these configuration configuration changes applied.
+Ja (Thanakul) Wattanawong: So step one is like a client asked to serve for an update. So like, let's say you apply a class like my class. So these are like, you know, roles in an RPG. You can be made. You can be an archer. I say, I'm going to be a Minecraft server.
+Ja (Thanakul) Wattanawong: And then the server asked clients. Okay, if you want to be a Minecraft server. I'm gonna need a list of facts from you. What's your name, how much RAM, do you have, what kind of CPU. Do you have. Do you have a GPU. How much free space. Do you have
+Ja (Thanakul) Wattanawong: And the client responds. Um, yeah. My name is zombies and have four gigabytes of RAM and the server says, Okay, here's what you're going to do. I'm giving you a catalog of changes, you need to apply.
+Ja (Thanakul) Wattanawong: It, you need to install this package called Minecraft server in in property as dot and server that properties config file. You're going to say your zombies are also worth your edu with four gigabytes of RAM and with this configuration file.
+Ja (Thanakul) Wattanawong: And then the and then the puppet agent on the client says, Okay, you know, it takes the catalog and it runs
+It.
+Ja (Thanakul) Wattanawong: Basically computes like your what what do I need to do. I have the package installed is the configuration file. Does it match what the servers as I need to have
+Ja (Thanakul) Wattanawong: Or and then we're going to make sure that everything is the same as what the catalog says
+Ja (Thanakul) Wattanawong: In this and at this stage, you can be in a different variety of different stages, right, like it could be that the Minecraft server is already running
+Ja (Thanakul) Wattanawong: But the configuration files, not the same as what the server says, or it could be that might have Sir is not installed at all.
+Ja (Thanakul) Wattanawong: In which you this, the puppet agent will need to install the package and in any case, it's kind of like all roads lead back to this controlled state that we want to have, which is a good thing and
+Ja (Thanakul) Wattanawong: And in puppet code. So puppet. This is also just like I'm more of the workings of puppet puppet the folder hierarchy is um it's broken into three types of things, mainly
+Ja (Thanakul) Wattanawong: You've got the files folder which contains like static files like configuration and never changes my scripts or like just script static files like images and stuff like that that you want to
+Ja (Thanakul) Wattanawong: Push to like these computer these computer. You've got templates and templates are really powerful because
+Ja (Thanakul) Wattanawong: We mostly use them to like template configuration. For example, if you've got like them configuration that like needs the server name, you can make that template and then puppet will insert the server name into their
+Ja (Thanakul) Wattanawong: Their basically files, but you can, you know, generate them with code.
+Ja (Thanakul) Wattanawong: Manifests are like the where the heart, the configuration where you really like us right puppet code.
+Ja (Thanakul) Wattanawong: Is that's the like specific programming. Programming language. We talked about you right puppet code to declare the state that you want that done machine to have. You've also got like a couple of other sections that we sometimes use
+Ja (Thanakul) Wattanawong: So you've got like the facts section, we talked about facts right you can also write custom facts. For example, let's say you have like some kind of
+Ja (Thanakul) Wattanawong: Um, let's see you have some kind of temperature sensor plugged into the computer, right, and then you want to have a fact that says
+Ja (Thanakul) Wattanawong: That says. Um, is there. Does this computer have a temperature sensor. So you can let write a script for that.
+Ja (Thanakul) Wattanawong: Put it in the fats folder puppet will run it and then you'll have that additional fact that you can use to you know make additional configuration changes.
+Ja (Thanakul) Wattanawong: You've also got functions and these are really fancy and you can go read up on them. Most of the time, you don't need them. So they basically have to do really fancy stuff.
+Ja (Thanakul) Wattanawong: Dependencies do need to be explicitly described in puppet. I'm just like, I'm so puppet. If you don't specify like a dependency puppet will run code in any order. For example, yes. The example is you have code and installs Minecraft and you have code that runs Minecraft.
+Ja (Thanakul) Wattanawong: It's not guaranteed what ordered runs in. So if you don't declare that, you know, running Minecraft depends on installing Minecraft then puppet might try to run Minecraft. But for insulin Minecraft and they'll fail.
+Ja (Thanakul) Wattanawong: It will yell at you and you'll have to fix it.
+Ja (Thanakul) Wattanawong: Um, we're just gonna look like. So now we're just going to look at, like, some other like puppet code for example. So this is like a puppet.
+Ja (Thanakul) Wattanawong: So now we declare like a puppet resource.
+Ja (Thanakul) Wattanawong: This one, the goal is to add a user and it's home directory. So you can see that the language is pretty intuitive. You the resource type is called user marked in red tells puppet create a new user with the name. Oh CF TV and this block like delineates
+Ja (Thanakul) Wattanawong: What parameters you like the list of parameters.
+Ja (Thanakul) Wattanawong: So the common would be like the team OCR TV is the user name for the new look like a small form computer at we have in the lab. I would show you if we were in there.
+Ja (Thanakul) Wattanawong: The home folder is going to be an OBE slash TV and it's going to belong to the group's SIS and audio and the default shows is going to be bash
+Ja (Thanakul) Wattanawong: And then since we declared this home folder we need to create it. So it needs to be a file.
+Ja (Thanakul) Wattanawong: Yeah files and directories all use the file resource. So it's going to be like that directory OBD TV ensure that it is a directory and it's owned by the correct user and it comes after this user is created.
+Ja (Thanakul) Wattanawong: So far, so good.
+Ja (Thanakul) Wattanawong: All right.
+Ja (Thanakul) Wattanawong: Here's another example.
+Ja (Thanakul) Wattanawong: So engine X is I believe you've played with engine X in a previous lab before engine X has a high performance web server.
+Ja (Thanakul) Wattanawong: So now this is like the kind of puppet code that lets you like just start up a web server and template everything
+Ja (Thanakul) Wattanawong: Um, so what you'll see here is, um, you know, we declare, we want the engine X package to be installed. We want the engine X service. So that's the system D service.
+Ja (Thanakul) Wattanawong: But you've also played with to be installed so that service depends on the package being installed and this subscribe call
+Ja (Thanakul) Wattanawong: This OCS specific class that we've defined where the subscribe basically like establishes like a type of dependency, where if this class like
+Ja (Thanakul) Wattanawong: Updates. For example, like it. It ran then engine X needs to run, then this service needs to restart the idea is, for example, we get a new we get a new certificate. Right. That's what the SSL default class does so engine X has to restart to serve that new certificate
+Ja (Thanakul) Wattanawong: Otherwise it will otherwise. Eventually the certificate that it serves will expire.
+Ja (Thanakul) Wattanawong: And then we specify like a file. And this is where the templates, come in. So on the right side you kind of see this is a template.
+Ja (Thanakul) Wattanawong: This is like the engine x.com
+Ja (Thanakul) Wattanawong: Like so. In in the Ruby syntax. Not sure if I can zoom in.
+Ja (Thanakul) Wattanawong: I don't think I can.
+Ja (Thanakul) Wattanawong: See in like in like
+Ja (Thanakul) Wattanawong: Jesus. I'm so in the so in this syntax. I'm this kind than this kind of like a bracket.
+Ja (Thanakul) Wattanawong: Person sign and N equals and then at variable on denotes like you know some variable substitution, they're also more like advanced constructs like a for loops and stuff like that.
+Ja (Thanakul) Wattanawong: You can go look it up on a puppet documentation. But you can kind of see how, like, we basically like substitute variables that we want to configure and
+Ja (Thanakul) Wattanawong: You can template this fall into Etsy engine X local.com the contents will be this template function takes this template file and fills in the blanks and then and then puts it there. As you can see, it also requires the
+Ja (Thanakul) Wattanawong: Package and notifies a service so notify subscribe and require all these three established like dependencies. So notify is like, subscribe, but in reverse. Right.
+Ja (Thanakul) Wattanawong: So when this file gets updated it notifies the engine next service to restart. You can specify both ways we can, we generally prefer something that is like easily readable and whatever makes it clear to the person reading it.
+Ja (Thanakul) Wattanawong: I believe there are like minor differences between, like, subscribe and require where I'm like, you know, like, subscribe, just like listen to the changes and require actually requires it to run before, but, um, I believe that the specifics you'll have to check documentation.
+Ja (Thanakul) Wattanawong: So now we're going to talk about like puppet at the OCR specifically
+Ja (Thanakul) Wattanawong: Like the history of puppet at the OCA is that in 2012 we invested heavily in puppet and
+Ja (Thanakul) Wattanawong: Because in the past when the SIS admins just edit the configuration directly on the server and on desktops manually and with 10 desktops. That was manageable. But now we have like 29 desktops and
+Ja (Thanakul) Wattanawong: Like then computer behind the TV and like milk like 10s of VM and like 10s of actual servers. And you can see how this quickly scales and becomes unmanageable. We got like like 10 different classes.
+Ja (Thanakul) Wattanawong: Stuff like that and seven years later we run every single machine off the puppet repo. Um, so yeah, including the puppet server itself. If you believe in. So the puppet server is configured using puppet.
+Ja (Thanakul) Wattanawong: All the quote all the code is split into modules and we apply specific modules to like specific like you know desktops and stuff like that.
+Ja (Thanakul) Wattanawong: And then. So, these, these are kinda like specialized module. This is just our like this is how we like, we set up our large public repo.
+Ja (Thanakul) Wattanawong: So we have the TV class we have the desktop class dub, dub, dub, which is the web server and the print host, which is the machine that handles all the like printing at the CF
+Ja (Thanakul) Wattanawong: And then we also have like common modules for a config like SSL, for I need a certificate and off for Alderman curb rose and security is really good stuff.
+Ja (Thanakul) Wattanawong: I think the other thing. What a bonus slide here is we're going to talk about Tara form which is so Tara form is also like a tool that's used for convict management.
+Ja (Thanakul) Wattanawong: The purpose is mostly to provision machines. That's, that's why it's Tara form because you Tara form the machines. I have like various like providers.
+Ja (Thanakul) Wattanawong: This is what I we use to create your student VM. And you notice that the provisioning part is mostly imperative and
+Ja (Thanakul) Wattanawong: Provisioning scripts do tend to be somewhat imperative, because it's just really easy when you don't have many provisioning imperative scripts are really easy to write when you don't have that many things to do.
+Ja (Thanakul) Wattanawong: And so you can see like, you know, we just set the host name to be the FAQ DN we add the user we reset their password. We expire their password we populate the MTD and we reboot the server.
+Ja (Thanakul) Wattanawong: Yeah, the other event that so imperative being easy and we can also like kind of abuse the fact that when you spin up a new machine, the state is already like
+Ja (Thanakul) Wattanawong: Consistent like it's kind of like a new baby. It's kind of a blank slate. You just, you can do it in order and you're guaranteed you will start the same place decorative models are really nice when you don't know how far you're like state has diverged.
+Ja (Thanakul) Wattanawong: And you need something to, like, just like bring it all back together.
+Ja (Thanakul) Wattanawong: Um, yeah, that's pretty much all I have to say about like configuration management. I hope you learn things the lab has eight has been uploaded and if you have any issues.
+Ja (Thanakul) Wattanawong: Feel free to ask me questions actually. And yeah, I'll be sticking around. If anyone has any questions or wants to know more about this stuff.

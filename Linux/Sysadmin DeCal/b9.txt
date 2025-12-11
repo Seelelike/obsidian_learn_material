@@ -1,0 +1,888 @@
+Linux SysAdmin DeCal b9: Version Control and Backups
+Subtitle
+see
+all right can everybody see my screen
+yep all right all right i'll just get
+started then so uh welcome to lecture nine of the
+beginner track of the linux system admin decal
+today we'll be talking about version control and backups
+my name is edric i am a former ocf member recently graduated
+and let's get started so first let's talk about version control so what
+exactly is version control version control is a system that keeps
+track of changes to code over time so some examples of different version
+control systems are mercurial subversion and git
+there are many others but we'll be focusing on git today because it's the
+most popular uh version version control system in use today
+so uh why would you use git as a programmer so
+git lets you record snapshots which are uh officially known as commits of your
+project over time so this lets you roll back to different
+points in time in your project in case something goes
+wrong you can also create what i'll call
+workspaces or officially called branches to kind of
+isolate your work from other versions or other developers
+so if you for example are working on a project and you want to implement a new
+feature and it's going to be like work in progress you might be trying some
+experimental stuff that will break um you can work on a separate branch so
+that you don't mess up like a working bug-free version of your
+code or if you're collaborating with multiple
+developers you can um everybody can work
+simultaneously without you know overwriting each other's code you may be
+working on the same file maybe like on the same method or writing like
+overwriting the same lines and git lets you
+kind of uh you know work separately and then
+merge all of your changes um when you need to sync up
+which brings me to my next point uh git also
+uh has functionality that lets you combine the changes of multiple
+developers contributing to a single project
+and um git will try to do this automatically unless uh you know two or
+more people change the same line of code in which case git will help you out by
+pointing out which lines are conflicting like two people you know
+wrote two different things on there and um
+that that'll let you like resolve that conflict manually
+so other reasons to use git uh so git lets you sync your changes to a copy of
+your project on a remote server so um
+uh every time you distribute a git repository
+[Music] you get a full copy of the repository
+with the full history which means you can
+put a copy on a server and have everybody kind of sync their changes all
+the developers sync their changes to that remote server kind of have like a
+centralized place to put all your changes
+um so you may have heard of you know the get you you have heard of the git
+hosting service github um there are others such as like
+bitbucket or um get lab
+but you probably use github for most of your school stuff
+um and this is often like a kind of point
+of confusion for some uh people like git versus github so git
+is the version control service uh system and github is
+you know a company that uh lets you put your get repositories on
+their servers so
+all these things sound pretty great um you know there's
+you don't have to create like
+multiple copies of your you know like python script
+with like final final final like this is the actual final one
+you actually have you know properly managed versions
+um there's no more losing code changes
+because you can not only um you know record all your
+progress and make snapshots over time you can also
+backup so to speak that progress to a remote
+server um
+uh yeah you will never you know have to break your code and then not know how to
+go back to a working state and also if you're working with multiple
+people you're not going to have to like manually like stand over each other's
+shoulders and like pick and choose like each person's lines of code to like go
+into the final combined product
+so let's start off with like the basic um you know functionality of git
+which is making changes and then recording those
+changes in a commit um or kind of like a snapshot
+so there are three stages of making a
+commit so first is modifying your code so like you have your project you know
+write some code and some files make some changes perhaps delete files or create
+new ones and then once you're ready to uh you
+know make a snapshot of your progress you're going to want to do
+what's called staging you want to stage your code
+this is basically telling git uh which of your modified files
+you want to make a snapshot of so if you've modified three files you may only
+want to make a snapshot of one of them i'll kind of elaborate on why later
+but this is kind of why there's a separate step between
+picking files and then actually making the commit
+finally the third step is actually committing your code
+so this tells git to record a snapshot of the of the files that you
+specifically staged in the previous step and then um writing a message a useful
+message for yourself explaining what changes you made during this snapshot
+so the first step you modify your code this
+entails several things from git's point of view so git will see
+that you've either added or deleted lines of code from an existing file so
+for example here we have you know our script dog dot py maybe we have we add
+some like we added some park method so that our doc can bark and maybe we
+mistakenly you know put a meow method in there that doesn't belong so we've
+deleted these lines so git will see that we've both added and deleted lines
+git will also detect if you've created a new brand new file
+so if cat dot py didn't exist and then we created it git would pick up on that
+and then finally the opposite of that would be deleting a
+file git will detect if you've deleted
+an existing file
+so
+uh if you want to view what uh files git
+has detected changes in uh you can use the
+git status command and this gives you a lot of other useful
+info as well uh
+if you guys have used git before you've probably learned git status
+um another command that's very useful is
+the get diff command so diff is short for difference
+and um if you type git diff while you have
+you while you've made changes to files git will kind of show you a
+summary of every single line that was changed in your code
+so newly added lines will have a plus
+character at the front and um
+oftentimes your terminal will color this these lines differently so
+it'll like make them green typically um deleted lines will have a minus sign
+at the front minus character and then uh modifications uh don't have
+a special character they just show a deletion of the old line and then
+addition of the new line
+everything makes sense so far does anybody have any questions
+all right let's move on
+so once you've you know made some changes
+to your code it's time to stage your code this step is basically telling git
+which of your changed files you want to make
+you want to include in your next commit so if i had made these three uh if i
+change these three files uh from this slide here
+we have we've added or deleted lines from dog.py we've created a new file
+called cat.ui and we deleted a file called shark.py
+this is kind of what git status like a summarized version of what git status
+will tell you um so
+it'll show some files as maybe modified if you make
+changes it'll show deleted files here and then there's a special section
+called untracked files which i'll kind of explain in a bit
+which is will include any new files that you just created that git has never
+recorded before if you type the command git add dog.py
+to stage your code uh this will
+stage the file.py and it will be included in your
+next commit
+so uh as i just said so you you'll be
+picking modified files you want to include in your next commit by staging
+them and um the command that you can use to
+do this is either git add or git stage um get out and get stage basically do
+the same thing so i won't worry too much about the
+difference between them um
+so you can either stage a single file like i did in the slide previously by
+specifying a single file with the git add command you can also um pass like a
+full file path to some you know file that's very deep
+in some directory like here
+or um you can kind of shorthand include
+all the files in a specific directory by passing just
+a path to a directory so commonly um you know people just want to
+stage every single file that they change they'll just type git add dot or get
+stage dot where dot represents the current directory and if you're in the
+root of your project um then that'll just stage all your files
+and finally um about
+this new file that we created that's listed under untracked files
+so git won't uh
+include that file in a commit unless you explicitly tell it to
+by staging the file so all you need to do is say git add
+cat dot py and it will start tracking this new file
+and uh why not stage every modified file when
+you commit i kind of went over this already um
+try to keep each commit as a single self-contained unit of work
+so say you're working on um
+you know two
+unrelated things uh and you commit changes to both of
+them in the future if something breaks in one
+of those files and you need to roll back you'd also be rolling back your
+perfectly good changes in the other file so when you make commits try to
+commit files and work that is related to each other and that would make sense to
+you know add as a like a collective or roll back
+as a collective
+and finally um actually committing your code is just typing the git commit
+command and then adding a commit message so that'll just take
+whatever files you staged and make a new snapshot
+so um
+and this new snap this new commit will
+be added on top of any previous commits that you make
+so regarding commit messages um i know a
+lot of people when they start out with git will just write
+you know throw away commit messages because they
+want to like keep moving the right oh i just like fix the bug
+or you know if they're desperate like please work
+um i think
+uh cs61a or b will show commit messages for
+you know some of their projects and you see people just writing random stuff
+and you know it's tempting to do that but it's really useful to have
+relevant and relevant commit messages to the actual
+changes that you made um one convention i like to use and that
+a lot of places use is kind of just complete the sentence this commit will
+so this commit will add bark function to
+dog that's a good commit message because it tells you it gives you a very brief
+brief explanation of you know what actual code changes
+occurred in this commit so that you can roll it back in the future if you have
+to and uh
+each commit will build on top of a previous also known as parent commit
+so when you make a commit uh every time you
+make a commit you're adding a commit to a chain of
+commits going all the way back to the beginning of your project
+and uh if you can if you think of each of these
+commits as a node with kind of an arrow pointing back to its parent
+such as here we have a chain of three commits this commit builds off of this
+commit builds off of this commit you eventually form a chain
+and once we add the concept of branching um
+these nodes will form a tree so
+uh we'll get to branching after this slide
+but a couple more details about making commits
+so once you make a commit if you want to
+see info about uh your commit history use the command
+git log and um each log entry in the uh
+when you type git log will look something like this
+uh so some of this requires some explanation like some stuff like the
+author is pretty self-ex explanatory that'll be your name plus an email
+a timestamp of when the commit was created here's your commit message here
+and uh some of the stuff that needs to explain be explained is up here so
+this big alphanumeric hexadecimal string
+is called the commit hash so what git does is basically
+kind of like makes metaphorically a fingerprint
+of uh your changes and makes a unique
+id uh for you to reference this commit by
+so if you ever need to write a command and reference this commit you can use
+the commit hash now in parentheses to the right of the
+commit hash is uh
+is some uh information that tells you
+like what branch you're on which i'll get to in a second and also
+sometimes if you're at the latest commit in a branch it'll say
+head so
+this head label is simply a pointer
+to the latest commit so
+uh i don't know if you guys get uh some of you are probably in like
+61a or 61b at this point so maybe you haven't done
+like pointers and stuff but it's basically like
+it's a label that points to you know a specific
+a specific commit um i think it'll make more sense later when
+i show a diagram so i'll get back to that and then the name of this entire
+chain aka branch of commits is called master
+so when you see this here head master it means i'm at the latest commit on the
+master branch uh so before i go into branching does
+anybody have any questions
+all right all right i will move on to branching then
+so if you remember this commit chain that
+we had back there uh where we had three commits building
+on top of each other let's
+simplify this diagram so i'll represent individual commits as these little
+circles these nodes and then i'll just show a
+arrow pointing to the previous commit which forms the kind of commit chain
+so here's the initial commit in our
+repository it's the very first one it'll be the root of our tree
+and then head is simply like a label that gets slapped on
+um the latest commit in a branch so here's the latest commit and this will
+be the master branch
+so if we were to make a new branch uh
+we're basically saying i want a new workspace
+to you know make changes add commits but i don't
+want to actually make them appear on master i'm going to kind of have my own
+kind of area here so
+the head of master doesn't change the latest commitment master doesn't change
+but in our branch my new branch
+we can add new commits shown in orange and
+the latest commit in your personal branch will also have a head label so
+this is the head of my new branch here
+and as you can see um mining branch and master share a
+common history um although master ends here um we
+uh on the mining branch we have the three commits for master and
+then we're building new stuff on top of it
+so by default your chain of commits will be
+on a branch that kind of forms the trunk of your commit tree so this branch is
+typically called master but it can be named differently the name doesn't
+matter master just happens to be the default
+um where i work most of the repos
+of the master branch is called mainline instead so you may hear me say mainline
+on accident but i will try to refer to
+the trunk branch as mastered during this lecture
+so a best practice is to keep the code on
+master in a working bug-free state and why is that well a lot of the time um
+uh you know if you're deploying code to
+uh like customers like live to clients
+um it usually comes off of the master branch so you don't want to put a bunch
+of messy work in progress stuff on master you want to keep it clean working
+and bug free and even if you're just like working on
+a personal project it's good to have you know a single branch that everything
+else is based off of be a branch that's actually working you
+don't want to build a house on top of a foundation that's already like cracked
+so why move your work to a different branch
+other than master so um there are several conventions for
+branching but two popular ones are making a new branch for each new feature
+so that your work in progress commits don't disturb the master branch
+um or you can make a new branch for each developer so that each person has like
+kind of like a name branch and then they can work on their own stuff in
+their own branch and nobody steps on each other's toes when they're writing
+code nobody you know overwrites other people's code until you decide to sync
+up
+so
+let's say let's do the first scenario um that's
+pretty common um which is branching for a new feature
+uh let's say for our little like pet repo
+here which we added some commits in master for dog making a dog dot py we
+want to add like maybe like a fish shot py
+so we create a new file called fish dot py
+and we make a new commit and let's say we edit that file so we
+add a swim function to fish
+so um you know as before you've seen this kind
+of diagram before three commits on master plus two new commits on fish
+same thing applies um here's the head of master here's the head of fish
+so um to actually create a branch uh you're
+going to want to use the command git branch
+so in this case if i want master i would type git branch
+fish and this would create a new branch called fish now this doesn't switch you
+to the branch fish you'll still be on master so you got to be careful when
+using this command
+now about making a branch so some stuff
+to elaborate on some stuff i said earlier the branch you create will be
+based on the branch that you're currently on
+or uh in other words the branch that you've
+currently checked out in git terminology and what i will call your new feature
+branch will inherit the commit history of its base branch
+so in this diagram the feature branch is
+fish the base branch is master fish shares some of its commit history
+with master so it has master's history plus
+two new commits
+and uh if you use the command git branch plus a new like the new branch name it
+won't switch you to the branch after creating it
+so make sure to switch to your branch using
+the command git checkout branch name
+um to make sure you're on the correct
+branch you can either type git status it'll tell you what branch you're on or
+there you can also use the dedicated git branch command without passing in a
+branch name so if you just type git branch
+uh it'll tell you uh the all the branches that you have
+locally and then if you add a flag uh the
+verbose flag which is just dash v it'll tell you more info information
+um so
+uh if you pass more uh
+these into the command sometimes it'll give you even more
+information but if you just type get branch v typically it'll just tell you
+what branch you're currently on by marking it with an asterisk next to its
+name and then maybe like the commit message
+of the latest commit on that branch and uh if you
+want to use a shortcut to both create and switch to a new branch you can just
+do git checkout and pass the be flag and then type your branch name and this is
+probably the one that's commonly taught um in a lot of cs courses but just know
+that this command is basically combining two separate
+commands gift branch and get checked out
+uh so uh anybody have any questions about
+branching
+okay so let's move on to merging then
+so let's say you've like finished developing your new feature it's in a
+good state it's no longer buggy you've added you know everything you want to
+your fish dot py you know it can swim you can bubble uh you know whatever you
+want so
+now let's now that it's in a working state you kind of want to copy it over
+from your like work in progress like workspace to the main workspace which is
+like the trunk of your commit tree you want to copy it back to master so
+how do you do this so
+git has a command called git merge which will
+attempt to copy over your work your commits
+from the feature branch
+onto your main branch so
+the command to use is git merge uh
+and then the name of your future branch branch while you're checked out on your
+base branch so uh to execute this command properly you're
+going to want to check out the branch that you want to bring the commits into
+so in this case you want to be on master and you want to bring in the commits
+from the fish branch so make sure you're on master first
+and then run git merge fish and that should bring in the commits
+so when you merge typically one of two things can happen
+one of them is nice and one of them's a little ugly so
+if no new commits have been added to the master branch while you're working on
+your feature branch then git will perform what's called a fast forward
+merge and the second scenario which is a
+little uglier is if new commits were added to the master
+branch while you're working on your feature branch
+um like say you're working on fish and you know one of your teammates
+uh finished some stuff so they added commits on top of master you know your
+fish branch is now based on an out of date
+version of master so if you're to run git merge in this case
+git will try to automatically combine the new changes on each branch
+uh using a merge commit uh this is also called a three-way merge
+uh which i'll explain in a bit um but this can get
+a little ugly and also you may have to manually resolve
+some merge conflicts when this happens so
+let's talk about the clean case first which is a fast forward merge
+so in this scenario uh the master branch nothing's happened
+on the master branch so we since we started working on the fish branch so
+our fish branch is still based on the latest commit on master we're like fully
+up to date on master right so
+if we want to merge in fish we can simply navigate to master
+and then type git merge fish and uh
+keep take note of where the heads of each branch
+are at the moment so this is the head of fish and this is the head of master
+right so if we're going to bring in the new
+commits on fish then
+kit will simply move the pointer of where the
+head of master is to the head of fish so this just fast forwards master
+in a sense basically bringing master up to speed
+with the new changes that you've made on fish
+and uh your fish branch doesn't disappear after you merge so remember
+that you know even though like we think of a
+branch as like a full kind of
+uh chain of changes like git internally just thinks of a branch as a pointer to
+a commit um that might be a little confusing but
+if you think about it all you need is the latest
+commit in a branch or all you need is a pointer to a commit to do to define a
+branch um because a branch will extend all the
+way back to the root so if i simply put the head of master here then this branch
+just you know goes all the way back to the
+beginning if i add a new commit to fish
+then it'll just this will be the latest commit on fish and then it'll go all the
+way back to the beginning so
+um back to this slide your fish branch
+doesn't disappear after you merge so if you
+add a new commit while in the fish branch the head of fish will update but
+not the head of master the master and fish branches simply share more common
+history in their commit change chains so um
+yeah as you can see here the two commits from fish were integrated into master so
+now our common history is longer and
+any new history appears on top of this anybody have any questions about a fast
+forward merge
+okay i'll move on so let's talk about the second scenario
+now which is a little uglier so
+what happens if new commits are added to master while we work on fish so git
+can't fast forward in this case because you know maybe your teammate added
+change some lines of code in this commit here
+that uh you changed in your commits so now they're like
+either um uh either you guys are like overwriting
+overwriting your changes or um you know there's just some kind of
+uh like combining that needs to happen to get everybody's changes onto
+uh the branch
+so in this case if we do the same thing navigate to the main master branch
+and then type git merge fish
+this is what will happen so
+git will try to automatically combine all the changes
+using three commits so it'll use the tip of fish which is this orange one uh
+orange commit marked here so the head of fish marked
+with a one the
+head of master marked with the two
+and then their common ancestor whichever commit um the fish branched off of
+originally so that this is why it's called a
+three-way merge git looks at the contents of these three commits and
+tries to you know do some black magic and combine everything automatically
+uh and all this like this combination basically happens and git will make this
+what's called a merge commit here which um
+you know has all the information needed to kind of
+combine everybody's work into this single thing
+um the reason why this is messy is
+well if you look now our tree kind of doesn't really look like a tree anymore
+it's we have a commit here that has two parents
+so unlike a fast forward merge
+where you know we just have a
+we have two branches but they share like a common history
+uh we now have
+kind of common history split into two different branches where you know if
+you're only viewing one branch you don't get the full story of what happened
+uh when we merged
+uh so yeah uh through emerges can be ugly
+because we have two parent commits for that merge commit
+and um you know unlike fast forward we split we split our history between
+two branches um and uh sometimes git can't automatically
+create a merge commit and will give you a merge conflict so
+what that means is uh basically two people
+changing the same line and then um git doesn't know which one which line to
+use um
+in that case git will kind of pause the merge process and force you
+to go into those files and then
+pick the correct line that you want to use in
+the final output of the merge
+so i won't go into merge conflicts today uh but you'll be resolving merge
+conflicts in the lab and uh they're very detailed express instructions on how to
+do so so
+uh you know if you work with other people kind of having this three-way
+merge scenario is kind of unavoidable so uh
+is there a way that we can avoid the merge commit and that's where
+rebasing comes in so before i get into rebasing does
+anybody have any questions about merging
+also i haven't been following chat so have there been any questions in chat
+like text questions that i missed
+i will take that as a no so let's move on to rebasing
+so let's try to avoid the commit uh avoid the merge commit so our problem is
+you know master has moved on with new commits while you know we were working
+on the fish french the feature branch
+now fish is no longer based on the latest version of master
+so the solution would be to quote rebase fish onto master
+by inserting the new commits from master into the history of the fish branch and
+then git can just fast forward when merging
+so this is a kind of three-step process
+internally that git uses so from fish if you type get rebase
+master git will
+start a rebase that performs these steps so step one would be to rewind the
+commits on fish temporarily so that so basically all the work that
+you did on this new branch git will kind of rewind and save
+and then the head of fish will now point at the
+common ancestor of
+uh the master and fish branch step two would be to
+bring in the new commits from master on top of the common ancestor this would
+basically be just like fast forwarding so that now our fish branch looks like
+master it has all the new commits on top of it
+and finally step three would be to replay the commits that you
+rewound off the fish on top of the new head of fish which is
+like an up-to-date master and git will try to do this automatically
+but you
+may have to resolve merge conflicts at this point um
+merge conflicts are kind of unavoidable whether you choose to merge and use a
+three-way merge or rebase first so let's look at this in a diagram
+so here's uh you know what rebasing looks
+like before we have a situation where if we were to merge we'd have a three-way
+merge uh you know master has kind of moved on
+with some new additions while we were still working on fish
+so let's try to avoid this merge commit
+so we've typed git rebase
+rebase master so this first step would be to rewind
+the commits on fish so the head of fish moves from you know
+what the head was previously to kind of pointing at this common
+ancestor right and we've saved these to all of our commits on
+fish for later
+so now that we
+uh have rewinded to our ancestor let's uh you
+know update and get all the new commits that happened on master
+while we were working on fish so this new
+commit you know now gets pointed to by
+the head pointer of fish so now fish is now
+pointing at the same commit as head we're up to date with master
+finally we'll take those two commits that we had
+rewinded and now let's replay them on top of this new commit
+and uh as you can see this will result in merge
+conflicts because we didn't really get around
+the problem where you know bob added some lines in here and we
+added some lines in our code and if we were to replay this on top of here
+we're still kind of colliding with each other so
+git will pause the rebase and ask you to fix any merge conflicts and then it will
+replay your commits on top of it
+so now that you know our branch looks like this it looks like
+it's in a state where we if we were to merge we'd actually get a fast forward
+and that was that's exactly what would happen and
+that was the original goal of rebasing before we merge is to get the
+kind of uh get the repo looking like this so that
+when we merge we have a clean fast forward merge
+so um does anybody have questions about rebasing
+all right let's move on to the final topic for
+um the git section version control section which is remote repositories
+so uh
+one of the cool things about git is it's distributed in nature uh every
+developer gets basically a mirrored copy of the entire project with the entire
+history which means you can also host
+your entire project's history on a server and
+upload and download and sync your changes to that server
+so this remote off-site copy of the repository is often called a remote
+you can use a service or company to host a remote
+copy of repository for you such as github or bitbucket
+uh or uh you can just use
+the cloud also known as someone else's computer
+uh or your own server
+and um to view your remotes in git uh just type
+get remotes dash v and again there's this
+v flag which is the verbose flag it'll give you
+a little more information than if you were to type the command without it
+so when you pass the v flag you'll get not only the names of
+your remotes but also the urls that they map to so remotes will map a name eg
+for example origin which you've probably heard before
+used in the command like you know get pull origin master or get push origin
+master origin actually refers to
+is mapped to a url uh in most cases like in your guys case is
+probably a github url uh where your remote
+repository is hosted
+so to actually sync your changes uh there's several commands that you can
+use one of them is git push uh
+followed by or name of a remote and a name of a branch
+so for example get push origin master get push
+origin you know fish if you want to push your feature branch
+to your remote repository and this will simply upload your changes
+onto the branch that you specify on the
+remote that you specify
+and then let's talk about get fetch so give fetch
+and get get pulled do similar things but um
+they have slight differences so if you do get fetch your remote plus
+a branch name it'll download your changes so kind of the opposite of a
+push but
+it will not integrate those changes into your local branch
+um so if you just perform a git fetch it will kind of update itself on the status
+of your repository any new changes that are in there but it won't change
+anything in your local repositories yet um i think
+most of the time you would rather be using git pull which is a command with
+the same format but
+it both downloads and integrates the changes from the remote branch to what
+whichever local branch the remote branch is associated with
+so this is kind of the equivalent to doing a git fetch and then
+doing git merge where you're merging the or the remote branch into your local
+branch so for example like git merge
+uh checking out your master branch and then doing git merge origin master to
+refer to your remote branch
+so a little more on remotes so
+your repository will not automatically sync with your remote this is not like
+you know dropbox or google drive where you know everything will be kept up to
+date you need to actually push and pull or fetch
+changes so that um you stay up to date
+so you know if you're working on something for several days on a team and
+you don't pull for a while like there's going to be a lot of changes that
+um you're going to have to spend time integrating into your code if there are
+any merge conflicts so make sure to pull often
+to stay up to date if you're working with other people
+um also make sure to pull before you push
+because you never know uh whether someone else you know pushed
+some new changes and you're now out of date um
+and finally try not to rewrite any already pushed commits
+uh so if we want to kind of work properly
+where we treat the remote repository as like a
+central source of truth for every developer on a team you don't want to
+rewrite the history of a branch like rewrite some old commits and change them
+while someone else is working on top of it because now you're kind of like
+you're changing the very code that they're you know building on top of
+so uh gits will usually warn you about um doing this uh
+typically it won't let you push if you've changed um
+the history like some older commits but if you have to uh and
+you're on a personal branch that only you're working on and you're okay
+with um overriding your older history you can
+use git push dash force to like force the push to go through
+uh but be very careful with this command and finally uh one more
+term that uh you see pretty commonly that i want i
+want to explain is um upstream so you may hear about like an upstream branch
+what is that that basically just means a remote
+branch and uh upstream will specifically
+mean the remote branch that your your local branch is kind of mapped
+to um so
+uh that just means like when you push or pull or like sync
+your changes um
+that is like the destination or source of uh
+with that push or pull command so um
+if a remote command uh sorry remote branch doesn't exist for a local branch
+uh git may ask you to create the upstream branch because a remote branch
+for that local branch doesn't exist yet um you may see this if
+you may have seen this before if you tried to push
+um like a brand new branch that you created locally it will ask you to do
+like git push dash dash set
+like upstream followed by like a name of a branch
+because no remote branch exists yet and that's
+kind of what the upstream is and uh one final note is remote and
+local branch names don't need to match you can map
+you know master uh on your local to you know mainline on the remote
+you can rename a branch and then map it to just
+push to master on the remote
+the names don't need to match they just it just needs to know
+this kind of tracking association when you first create the branch or you
+can like modify this association with different commands later
+so uh before we move on to backups does anybody have any like
+questions about git like general questions
+if you fetch what happens to the changes that you fetch because you don't
+integrate them uh
+so i don't know exactly where like git puts them but git will like um
+if you've ever typed ls-al in a directory um dash al
+meaning like you're showing hidden files you'll notice that there's a little
+folder called like dot git in there that's typically hidden from your view
+and git basically stores everything that git uses to you know keep track of
+history and everything so when you fetch i would imagine is
+those changes get pulled into a branch
+uh like if you fetch like origin master there will be like an origin master
+branch and then um that exists inside that dot
+get folder that you've like synced now and downloaded now and then whenever you
+feel like you can type git merge origin master and it'll merge in
+um the changes that you downloaded so it's not really happening
+if you do get fetch and then get merge that git merge is not actually
+downloading more stuff from the remote it's just using whatever was
+downloaded before from git fetch
+does that make sense or uh yeah that makes sense
+okay thanks
+yeah no problem does anybody ha anybody else have any
+questions like this can be also like stuff that's like not
+um covered by this lecture if you just have
+like random questions about like get commands and stuff
+if there's time i can show some like useful
+commands at the end that i found like i use a lot
+um that are uncovered by like kind of the basic concepts in this lecture
+yeah one thing is i was working through the lab
+and i saw that that uh they wanted you to detect like the get diff of the old
+commit versus new commit i don't know how you would find like the the numbers
+you would use for those though okay so um there's several different
+ways you can do this so if you if you want to um reference a specific commit
+uh
+okay so um do you remember the git log command so git log will display like a
+history of all the commits in your branch
+and if you want to reference a specific
+commit you can copy this commit hash
+so if you want to find the difference
+between two commits you do like get diff of like
+the old commit hash space like the old the new commit hash
+and it should give you a difference between those
+uh does that answer your question yeah i see now thank you
+yeah and like uh if you uh i if i remember
+uh i wrote the lab a while back uh i gave some different
+things you can pass into git dip so git diff actually takes a lot of different
+inputs like you can give it commit hashes you can give it two different
+branches and it'll just compare the most recent commit on each branch so i can
+say like get diff phish and master and it'll give me the
+difference without actually having to reference the commit
+um you can use like relative uh
+pointers so remember how the head always points to the latest commit on a branch
+you can do head and then like the squiggly i don't know what's called it's
+under your escape key like the squiggly sign
+and then like a number and then that will be like
+that will refer to basically x commits before the head of the branch
+so if i want to do like three commits before the head
+i can say like get diff head squiggly three
+and then head and that'll compare like three commits before head and like the
+current head does that make sense
+that makes sense yeah
+um any any other questions
+okay i'll move on to backups for now uh and then at the end uh
+what time is it oh sh oh crap okay that was actually an
+hour damn uh i'll just go really quickly through backups and like if you have any
+questions about like kit uh uh just uh feel free to ask them on
+decal general channel on slack
+so the very short like
+uh story about backups is just do it like
+things will go wrong with your data and uh
+if it's important data that like you really can't replace
+then you're going to want to have multiple copies of it
+um a lot of our digital lives are now you know on like web services so like
+if my computer dies like i can just
+redownload my dick games off steam all of my homework is on my google docs
+stuff like that all my photos are on google photos so you know it's not as
+perilous as i guess it was before but you know if you have like important
+family photos you have um
+you know important like financial documents you're going to want to have
+multiple copies of those because those you really can't get back
+so um yeah
+uh the best way to do backups would be to automate them
+uh if you manually back up like you can get lazy you can forget to and soon like
+if you lose your data you might realize that the last time you backed it up was
+a year ago that's bad uh
+also like if you're backing up important information like financial documents
+uh make sure your backups are secure and then finally make sure your backups
+actually work um you know if you back up something and
+then try to restore it a year later and realize it's like corrupted uh then
+you're kind of out of luck
+so one good rule to follow with backups is
+the three two one rule so
+have at least three copies of your data um store your data on least two
+different storage mediums so maybe you have
+you know the data on your computer which is like not really a backup you have the
+data maybe that you copy to an external hard drive
+and then finally have at least one copy of your data
+off-site so you can like have a server at
+i don't know like your parents house or like more commonly you just use like
+a cloud service like i don't know amazon s3
+don't like upload everything to google drive etc
+because if your house burns down with your computer and your second external
+hard drive in it you're going to want to have that third thing that's in a
+different place
+so um i'm gonna go through this story really
+quick of a
+backup like
+mess that happened at a real company that caused a lot of
+stuff to be lost it was a big show so gitlab had a
+big database outage in january of 2017
+so some engineer accidentally ran the remove command on their production
+database and like deleted a bunch of stuff and like he quickly control seed
+and canceled it but like about 300 gigabytes of data have already been lost
+so they're like okay like you know don't do that but like we have
+backups so it's okay and this is a good learning experience right
+so first they went to go check up on their
+backup which they backed up to amazon s3 amazon s3 is like a storage
+uh service that and that's hosted on amazon aws
+so you know gitlab automated their backups like as you
+should uh and had a script that would i guess
+back up their stuff to amazon s3 every 24 hours like good job like daily
+backups like that's pretty good um you don't lose too much progress you
+know at most you lose like 24 hours worth of stuff
+um but when they went to go inspect their
+s3 backup turns out their backups have been
+failing for weeks due to you know some version mismatch
+and uh they also weren't notified that their backups were failing because
+that system also failed so like that's really bad news so
+next they turn to um
+uh snapshots they try to get snapshots from their cloud hosting provider so git
+lab uses uh microsoft azure which is like a i
+guess a competitor to like for example amazon aws or google cloud so they host
+all their servers on there and azure you know offers options to
+you know have snapshots of an entire disk periodically so like all right
+let's use azure we also have daily snapshots on azure so
+this would be fine right um
+they didn't enable them on the database servers which is the specifically the
+server that they lost stuff on because they thought they had enough backups
+they didn't follow like the 321 rule here
+so the only reason gitlab still exists and people i still i guess still use the
+service is that they were able to recover
+their data at least part of it using lvm smash snapshots so
+lvm is uh stands for logical volume manager it's like kind of like a linux
+unix related utility i won't get too much into it
+um but i guess it has the ability to take
+snapshots and uh every 24 hours it would copy
+production data uh to a different environment and
+luckily someone else had run a script to do that
+six hours ago so they were able to get some of their data back that was
+deleted but
+this resulted in something like 18 hours of downtime for the data that was
+deleted
+since um like this kind of lvm snapchat thing was
+not meant to be used as a backup so one thing you want to also like
+keep in mind about backups is it's kind of useless to have a good
+backup that you can't like restore in
+like a good amount of time like
+if it takes ages for the company to let you download a backup then like you
+might be you know out of commission for days so
+you know choose a backup that you can besides the other rules that were you
+know established earlier like choose a backup process that you can recover from
+quickly as well
+so um you know they lost
+they weren't able to fully recover they lost a lot of projects a lot of people's
+work and um
+the good thing is they didn't fire that engineer that accidentally did that
+because like the real problem wasn't that the engineer accidentally did that
+because accidents happen it was because you know they didn't properly vet
+uh their backup process so i imagine they have a much better backup process
+today
+um so there are a very small number of
+questions about these backup tools on the lab
+um i would recommend you just uh
+you know google some of like how to use some of
+these tools uh this is a bit of a like a
+self-learning experience um
+this so this lecture is not gonna go over like in detail how to use them but
+like you can easily find uh tutorials to do some of the basic stuff that we asked
+for on the lab but just to give an overview of what these tools are so
+rsync is um kind of
+i guess the og command line tool for making local
+or backups between two like uh
+internet connected computers i'm gonna put it that way because
+basically if you can ssh into the other computer
+you can use rsync um
+our sync has some like optimizations uh so that it doesn't kind of like copy
+files that haven't changed that are already on the road server
+um and here's like an example command of kind of what an rsync command looks like
+uh if you'll notice like this kind of looks like an scp command if you ever
+use secure copy which is like ssh but like if you need to copy a file from
+like i don't know like your ex instructional computer back to your
+computer like you'd use scp you'll notice that rsync kind of has the same
+format right here
+rclone which is the next cool next tool is based on rsync um someone
+said i like rsync but i wish it worked with like cloud storage like google
+drive or amazon s3 so
+this guy made uh like a version of rsync that does that called rclone
+it supports every major major cloud storage provider i think the list is
+something like 50 different providers and uh it kind of uses similar commands
+to rsync since it's based on that and you can also mount cloud storage as
+if it were like a local file system on your computer
+like a network drive
+um next is our snapshot so
+this is like another improvement on top of rsync
+uh that'll kind of do instead of like
+merely copying files it'll do more i guess optimizations for
+taking like incremental snapshots so kind of like i guess maybe how like
+git will build up changes this is kind of also how this works it'll just kind
+of find the difference between um
+you know all your different backups so this can let you like save up on
+storage space um and there's some other incremental backup tools that you can
+check out but they're not on the lab so you don't have to worry about them too
+much don't use um
+git for backups uh so git is not really made for storing
+large files like if you try to push like a huge like file to github it
+typically like i think it won't let you and it's just really not optimized for
+you know working with a lot of big files so
+use a dedicated tool and don't use git use git for like individual projects get
+can servers a backup for your like code projects
+but like not really as a general backup if you wanted to like backup all the
+files on your system
+so in conclusion like just back up your
+if there's if it's anything that's like worth losing like make sure you have
+copies of it so um
+that's the end of the lecture so does anybody have any like further
+questions uh i know i went over time here
+but i guess that was perfectly one hour on the dot so
+any questions about like general backup concepts
+or any more questions about like
+uh git stuff
+[Music]
+all right i guess uh we're good to go then
+um if you have any questions like that you think of later uh you can
+just drop them in decal general channel uh
+on the ocf slack and also if you have any questions about
+the lab you can drop them there too
+um i will go through the
+lab right now real quick just to do kind of like a sanity check to make sure that
+nothing's wrong um but yeah if you if you get stuck
+just message in general and i'll try to take
+a look when i have time and uh yeah that's it
+i think lab has been released on gradescope so you can start submitting
+the answers for that
+all right i will stop the recording here

@@ -1,0 +1,250 @@
+{
+  "main": {
+    "id": "97e69749427851ab",
+    "type": "split",
+    "children": [
+      {
+        "id": "e7ff01493232f7f3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3db21995a5e36d2b",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "Linux/Sysadmin DeCal/PPT/Advanced 8 - Config Management - FA20.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "Advanced 8 - Config Management - FA20"
+            }
+          },
+          {
+            "id": "42658701ecaab452",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "2025-12-10.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2025-12-10"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "51477a55ce564346",
+    "type": "split",
+    "children": [
+      {
+        "id": "6ee6576c7f0ea5b8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5b0903af7ce4b66f",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "6c3e6f69638ea72c",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          },
+          {
+            "id": "dd9fb958e17d7064",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "d99def764e9cce6f",
+    "type": "split",
+    "children": [
+      {
+        "id": "eab965cba6fba6d3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bb0909cefb9879cb",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "ML/机器学习(周志华).pdf",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "机器学习(周志华) 的反向链接列表"
+            }
+          },
+          {
+            "id": "fc7209636c9d0628",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "ML/机器学习(周志华).pdf",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "机器学习(周志华) 的出链列表"
+            }
+          },
+          {
+            "id": "3d58cf696539efdd",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "619f2e5d76244f58",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Linux/Shell/Shell 基本运算符.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Shell 基本运算符 的大纲"
+            }
+          },
+          {
+            "id": "110b18c81877a8fd",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "lucide-ghost",
+              "title": "calendar"
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 233.5,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "obsidian-to-anki-plugin:Obsidian_to_Anki - Scan Vault": false,
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "bases:创建新数据库": false,
+      "omnisearch:Omnisearch": false,
+      "obsidian-hypothesis-plugin:Sync your hypothesis highlights": false
+    }
+  },
+  "active": "42658701ecaab452",
+  "lastOpenFiles": [
+    "Linux/Sysadmin DeCal/PPT/Advanced 10.md",
+    "2025-12-10.md",
+    "Linux/Sysadmin DeCal/PPT/Advanced 9.md",
+    "Linux/Sysadmin DeCal/PPT/Advanced 10 - Virtualization, Containers, Dist. Arch.pdf",
+    "Linux/Sysadmin DeCal/Decal后学习建议.md",
+    "Linux/Sysadmin DeCal/PPT/Advanced 9 - Security.pdf",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.1-c-yu-yan-shi-xian-cao-zuo-xi-tong-de-you-lie-shi.md",
+    "未命名.md",
+    "未命名 3.md",
+    "未命名 1.md",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.2-gao-ji-bian-cheng-yu-yan-shi-xian-cao-zuo-xi-tong-de-you-lie-shi.md",
+    "mit6-s081/lec21-networking-robert.md",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.10-should-one-use-hll-for-a-new-kernel.md",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.9-evaluation-hll-performance-cost-2.md",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.8-evaluation-hll-performance-cost-1.md",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.7-evaluation-hll-benefits.md",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.6-heap-exhaustion-solution.md",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.5-heap-exhaustion.md",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.4-biscuit.md",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.3-choose-golang.md",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans",
+    "mit6-s081",
+    "Linux/Sysadmin DeCal/PPT/Advanced 8 - Config Management - FA20.pdf",
+    "6.S081/biscuit.pdf",
+    "6.S081/biscuit.pdf.crdownload",
+    "Linux/Sysadmin DeCal/lab/lab7.md",
+    "Linux/Sysadmin DeCal/lab/lab3.md",
+    "6.S081/mit6-s081/lec19-virtual-machines-robert/19.7-dune.md",
+    "6.S081/mit6-s081/lec19-virtual-machines-robert/虚拟机.md",
+    "6.S081/mit6-s081/lec19-virtual-machines-robert/19.6-ying-jian-dui-xu-ni-ji-de-zhi-chi.md",
+    "6.S081/mit6-s081/lec19-virtual-machines-robert/19.5-trap-and-emulate-devices.md",
+    "6.S081/mit6-s081/lec19-virtual-machines-robert/19.4-trap-and-emulate-page-table.md",
+    "6.S081/mit6-s081/lec19-virtual-machines-robert/picture/Pasted image 20251210111212.png",
+    "6.S081/mit6-s081/lec19-virtual-machines-robert/19.3-trap-and-emulate-emulate.md",
+    "6.S081/mit6-s081/lec19-virtual-machines-robert/picture/Pasted image 20251210105536.png",
+    "6.S081/mit6-s081/lec19-virtual-machines-robert/picture",
+    "6.S081/mit6-s081/lec19-virtual-machines-robert",
+    "6.S081/belay-dune.pdf",
+    "Linux/Sysadmin DeCal/PPT/picture/Pasted image 20251202160508.png",
+    "Pasted image 20251113184641.png",
+    "Pasted image 20251106204319.png",
+    "Pasted image 20251106204248.png",
+    "Pasted image 20251113185738.png",
+    "Pasted image 20251113190201.png",
+    "Pasted image 20251119152002.png",
+    "Pasted image 20251119152601.png",
+    "ML/未命名.canvas"
+  ]
+}

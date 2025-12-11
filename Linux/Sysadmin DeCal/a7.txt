@@ -1,0 +1,336 @@
+Linux SysAdmin DeCal a7: Networked Services (Fall 2020)
+Subtitle
+hello hello welcome to the network services advanced
+track lecture of the ocf xcf linux system and decal
+my name is lauren mcintyre you can find me as
+user mckint on ocf services and email
+who am i what are my credentials i've worked as a platform engineer
+at cloudless i started in berkeley and i'm a former
+general manager of the ocf and member of root staff
+i'll note that these slides tonight are based
+in large part on jsonparents … slides from a previous
+lecture and i've updated them to motivate the importance
+of some of these services add new emphasis
+what's special about network services so the whole internet
+is … uh where we an example of the tremendous value of
+network services this lecture is coming to you from a
+whole tower of services that both directly and indirectly
+support your access uh it's worth mentioning
+uh metcalfe's law whenever we talk about networks that the value of
+telecom networks telecommunications initially phone and also internet
+grows with the value the square of the number of users connected this is
+really interesting to dig into further and read about wikipedia
+a great example of … the growth of value that these telecom services have driven
+uh networked services are also special because we they're con
+security concerns they're um enormous opportunities uh for misuse that come
+from connecting them to the world so their
+malicious users are a big concern that we have to design systems to respond to
+and sometimes users can even be accidentally problematic
+so the ways that we deal with this include rate limiting
+inside applications and also at the network communication stack level and
+there are acl's access control lists firewalls uh
+and all manner of um automated solutions to
+deal with this uh semi-automated what is dealing with
+this um it's it's also worth mentioning uh fail to ban um and things that uh
+automatically block users as they engage in malicious
+behavior so networks need to uh
+need to handle and deal with clients who are looking to get value from the
+services from centralized places um some of the
+ways we deal with enormous loads from clients
+are load balancing among multiple servers
+and using timeouts if clients … claims go away
+a lot of the value from network services comes from getting to centralize
+cost and maintenance operations and so you see enormous centralization
+effects in network services and winner take all
+effects
+these network services that we'll look at are all built on a pretty standard
+and unified api the socket api api is an application
+programming interface … uh this was you you should be familiar with these
+from the last lecture networking sockets um they're heavily
+relied on unix the unix everything as a file paradigm
+is has been of great use here and has allowed
+application complexity to stay relatively low
+and enable people to focus their development efforts the
+the product of their focus and programming um on
+value-add portions of the stack instead of re-implementing the ways of
+communicating between computers and so on so a really good example of
+uh let computers do repetitive tasks and then build on top of that build the
+useful functionality on top of that um sockets
+are very familiar should be a very familiar interface for programmers
+um there are actually a few different kinds of sockets uh there are as you've
+seen pipes are well a related concept
+um sometimes bi-directional uh and it's a this api this interface
+um for communicating again is widely used
+um but for today we're talking mostly about internet sockets which are
+really um the what would have taken off in broad usage
+the way that sockets connect it's important to understand um so these
+are the the diagram depicting the system calls
+that happen um diagram um so time sequence from the
+top uh at someone on the tcp side
+um so tcp connections as visa mentioned tcp connections are
+stateful um … and keep track of what's been received what hasn't whereas
+udp you can with udp you can just
+blast packets onto the network and there's
+no way specified in the protocol of knowing
+what data was received so if you want to send and ensure that it was received and
+received in order then tcp is what's used
+so to make that happen um one side of a connection has to be a
+server that listens so this server will set up a socket um
+here you see the socket it'll bind to an address
+and port um it'll start listening on that port and then it calls accept
+accept and waits for connections this is an important point in the kernel
+a lot of stuff has been optimized here to enable enable web skill services
+interesting place for further research so when clients
+connect they create a socket and then they call connect
+on the server's address so we talk about in network services um the ip
+port pair and then when you make a connection each connection is
+uniquely identified by the ip address and tcp port pair and so you
+have a client side and a server side so that a
+quadruplet and this should uniquely identify this
+unique identifies every connection the server once the connection is
+accepted reads uh bites off the wire that the client has
+sent so connect the client connects and writes um sends data to the server
+um under the hood tcp does some
+acknowledgement and re-transmitting of stuff and timeouts
+but the clients over communicate with each other with
+write and reads um and then finally when they're done they
+um send packets with a thin end of
+uh connection notification
+um and then cs162 … has more information about internet services and networks
+how they're implemented how to use them uh see the guide to get in the notes
+also so some popular example of networked
+services um here's the point that i really
+focused on um i want to introduce and motivate these services and then
+characterize them one by one at the end we'll
+review a final few helpful tools for learning and debugging through
+inspecting network state in the kernel i've loosely
+ordered and grouped these services by use case
+or role and these services are really key foundational building blocks
+for other services and use cases and they also represent a diverse
+variety of usage patterns seen in the wild
+from fairly short uh one-off request response things
+to uh frequently updated things things that heartbeat
+regularly um … for example
+just just to briefly motivate the importance um dns
+makes internet scale communication usable and possible
+for human minds we don't have to remember
+a whole sets of ip addresses to communicate with the host that we want
+to across the network we just remember a central directory service and
+then get to find the latest place to communicate with
+whoever we're trying to communicate with ntp ensures that uh protocols that rely
+on time which especially includes security
+protocols but also also i some many ip services um
+can safely do so um and uh this ntp stands for network time
+protocol um and uh is
+do we outsource that time handling and centralize it
+um in this single service um it's i recommend reading about uh ntp
+the nist national institute of standards and
+technology uh root time servers um … nist the standards body and then a
+couple companies maintain time servers with atomic clocks
+and then there's a whole hierarchy of … keep passing out up
+up to date times um in a tree so as not to overload the root services
+so ssh enables logins as you're familiar with by now and then
+some of the stuff that really drives value are web servers and databases
+which underlie the hyperscale and increasingly
+social interactions that we value and that looks to be the way of future
+growth it's useful to think of them in sort of
+like a non-strict analogy useful to think of these as lower layers
+in the stack like the osi model from iso or ieee's
+standards where ieee defines um electronic physical device standards and
+how … what communication protocols um they need to use to interrupt operate
+with each other devices from different vendors
+finally also the ietf internet engineering task force rfcs
+request for requests for comment and these are
+actually in practice becomes standards they update over time
+but ietf likes to emphasize that these are sort of soft
+standards they're updatable over time in general
+the itf has a motto they value rough consensus and running code
+so really internet native startup like just … get it roughly working
+and get it out and these standard support or supporting
+layer for sorry these services are a supporting
+layer for all of the web-based services that we love to use
+so dns as a reminder dns maps domain names human human meaningful
+strings well generally meaningful two ip addresses either ipv4
+ipv6 and some common dns servers include
+bind from berkeley berkeley internet name davin
+rap53 from amazon um
+s1 … the network time protocol distributes time over the over the network um the
+way it does this has to involve bi-directional
+communication where you keep time on one machine and you um
+send send out the current time as you see it and then
+uh so a server sends out the current times it sees that the client responds
+sort of as soon as they can and then the server reports what the
+elapsed time that the whole connection took
+and from this it can infer within a within a big window it can narrow down
+to approximately the right time
+one of the oldest protocols currently in use
+and … it's surprising just how important it is
+uh clocks need to be reasonably accurate for
+security protocols as i mentioned earlier um so ssl
+tls um is the new name for the same protocol transport layer security
+and certificates and kerberos both rely on
+on freshness on knowing that clocks are the same
+to mitigate against a class of attacks to show that things are
+connections are fresh
+so sharing time is critical for security and for encryption as it relates to
+communication um over the network
+ssh you're familiar with secure shell uh for logging into
+vms um it's a nice service to keep running
+um to enable you to log back into services
+that have gone offline
+so that you can debug debug your network services to bug your
+vm um or make updates uh it's also really easy it's well
+supported as a way to tunnel other traffic um you
+can look into socks 5 proxies a nice way to be able to
+quickly proxy uh connection and make it appear
+as if it's coming from a different machine um
+or to uh … to secure traffic um say if you were on uh insecure wi-fi
+you could use uh socks five proxy run by ssh to
+quickly um secure the insecure part of your connection as
+mentioned like on coffee wifi wi-fi coffee shop wi-fi router for example
+nfs a network file system is used to share files between multiple
+servers so the ocf relies on this may i guess probably not your vms
+uh it's been around for a long time um it has to deal with some really
+interesting challenges synchronizing files
+so the file lives on the server and it's shared with clients
+uh and clients can treat the files if it's local and you don't have to have
+network services explicitly handled by by whatever local application you're
+trying to use we don't want photoshop to have to know how to fetch files of our
+network we want to be able to just pull a file from the local hard
+drive and then nfs deals with synchronizing things
+there are problems in with nfs that have been
+around for a long time and it's not any easier to solve
+so … the addition of new things object storage services uh new web
+services um that synchronize things differently
+um has … improved the handling of
+some uh file synchronization things related to nfs
+um yeah clients are needle at this disk
+space
+ldap as mentioned stands for lightweight directory access protocol
+it's used … oftentimes to store passwords mainly um although it also
+stores all kinds of info metadata information
+about what organization
+or … useful tool computer reference information
+is needed to keep an account so this lets management of users
+scale differently from service provisioning
+and … berkeley's infrastructure berkeley also runs an ldap server you
+can search part of it for current users at
+berkeley.edu directory … it
+has a usually maintains a strict hierarchy and so
+uh corporations any organization with a large
+it component will run ldap either itself as a standalone
+service or as part of a microsoft service active directory
+service offering um to enable computers
+um to look up users and often give them authorize them
+or to allow users to look up each other and even to coordinate between non-user
+entities
+kerberos is a related service it does uh authentication
+um in a slightly different way than ldap ldap will often store passwords and
+require a password to be sent to a server that
+has a privileged view of hashed passwords
+and kerberos provides security without having to
+provide password hashes and verification to everyone
+um … kerberos is a little bit complicated but does some
+you authenticate to get a ticket a secure token
+um and that token has a short expiration time and so you can use your secure
+token to log into other services hosted on the same domain
+run by the same organization
+and it's designed to work over a network that you don't necessarily trust
+so it's used in windows and it's used quite often in unix too
+web services
+nginx um is the new most popular web service um it's
+designed for higher concurrency um and certainly
+faster than apache and it's often used as a proxy in front
+of other services um apache slower than engine x it's been
+around for a long time it was written in a way that was simpler
+during its time nginx uh uses a newer paradigm
+of handling many connections on the same thread and so it has to more carefully
+manage the state that it keeps internally to
+ensure that there aren't security vulnerabilities by
+mixing um the handling of connections across a single process thread
+uh and there are many other service offerings
+uh uh i should clarify apache uses a conceptually simpler method of
+handling connections where each process spun up handles one
+set one network request and then dies database servers the other real point of
+value um you can access them over the network
+uh quite important too some of these can
+get very big and it's nice to be able to scale … the databases
+separately from other services if you have
+a lot of users and a lot of load you can provision
+database larger database servers and handle it
+uh separately from um front end load
+through your tool for kind of dynamic web applications um
+wordpress you might be familiar with django the
+python … framework uh ruby on rails many great web applications built in
+that um … it helps it helps add a lot of value
+inside organizations to decouple
+the storage of important and interesting data from
+all of the ways of handling and presenting it
+mail servers another key technology for communication it's been around for a
+long time hasn't well has evolved a little but really not
+that much it's stayed backward compatible um
+and it was maybe the first killer half of the internet
+um back in the 70s people were very excited when they first got email
+accounts and could send cheap easy messages
+to people across the country
+um there are a couple protocols uh that together
+allow you to store well to send email forward through a series of hops
+smtp simple mail transfer protocol
+there are also other protocols for downloading mail once it's received at
+the target domain for example ocf.berkeley.edu it's a
+target domain or at berkeley.edu … and so you can use
+pop3 um to access mailboxes in a stateful way or imap allows
+so to speak poking uh mail storage from afar
+and um managing mail without having to download the contents of the mailbox
+also jmap is a new contender in this space
+that allows even faster and easier remote access remote control of
+what a server does with your mail
+finally load balancers are the balancers handle web connections and
+do multiplexing of connections so
+they terminate connections and we'll handle say ssl and then forward on the
+rest of the connection data to web servers directly or
+to database servers they
+help scale things out allow you to have a lot more clients
+so how proxy is this big one used here although sometimes nginx is also used as
+a load balancer um
+accepts connections and then sends them somewhere else to be to be answered yes
+buy another service and then there's another service envoy
+it's used in a sidecar pattern especially in kubernetes … or other
+containerized … containerized uh deployment frameworks um
+this service mesh concept uh also includes a couple other things beyond
+load balancing where you can um look up uh it it does load balancing
+but it does like active load balancing with the
+current set of servers so … it enables a
+a decoupling of where how to route traffic how to decide which
+service should handle it um from the physical hardware that
+something is hosted on and allows it to route at an even more granular level to
+certain containers and to update in real time
+as those containers come online and go offline
+and finally how do you check what network network services are running so
+netset dash sudonetel will show you
+a bunch of connections so dash out listening um
+and then i should be familiar more familiar but um
+pseudonymous dad plunt and peanut um show you
+a more narrow useful interesting um suite collection of connections that are
+open another though a worthy mention is
+ss socket something is the new command that
+lets you view … socket state in … second state of network connections
+in the kernel so the example pictured here
+shows an irc's server … and a number of services that we're familiar with from
+the lecture running and listening on different ports
+uh we see our old friend ntpd down at the bottom so
+ntp daemon which … keeps this server
+up to date on time we also see so at the top in inspire cd
+um a popular fast irc network daemon interesting beam so something is running
+erlang here um nginx web server sshd allowing people
+to log in andronex again a different process and finally znc
+pointed out again znc is a bouncer that lets you
+appear as if you're connected to an irc network but
+not have your client connected at all times since irc isn't stateful
+since rc doesn't let you statefully receive messages like you can with
+facebook messenger where messages or messages still come to
+you when you're logged off um znc … is like a
+it's like a mail forwarder or … it's like a mailbox where you can receive messages
+and then talk through it
+and finally we get to questions so i'll see you on the call otherwise feel
+free to ask in the decal general irc channel

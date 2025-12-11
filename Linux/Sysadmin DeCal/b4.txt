@@ -1,0 +1,313 @@
+Linux Sysadmin DeCal b4: Packages
+Subtitle
+hello everyone and welcome to the third lecture for the unix sysadmin
+decal for fall 2020 my name is ethan smith and today i'll be
+talking about distributions packaging and compiling
+i want to thank tony's too for the slides
+that i uh that these slides are based on so today i'm going to be talking about
+distributions … and more specifically debian distribution i'm going to talk
+about packaging and how we use packaging to install programs on
+linux distributions then i'm going to be talking about
+compilation as an alternative method of installing software on a linux
+distribution so to start off with we're going to be
+talking about distributions in debian what is a distribution well before we
+talk about that i think it's important to
+introduce the idea of an operating system
+and essentially it's the kernel which is a program that talks to the hardware
+and talks to the hardware for a program other programs and other software that
+gets bundled with that kernel so for windows this would be
+the nt kernel and windows explorer internet
+explorer notepad etc on mac os
+this would be the xnu kernel along with various mac utilities that gets shipped
+with mac os but on linux it's the linux
+kernel of course because that is where the name comes from
+and there are actually many different software configurations you can have
+because it's open source and so we've created this idea of a
+distribution to describe differing … bundlings of programs with
+the linux kernel in different configurations of
+the linux kernel and so each distribution
+has its own different flavor of what linux should look like
+sometimes people have taken distributions
+such as debian and created so-called derivatives where they've said i like a
+lot of what debian does but i want to do something a little bit differently
+and so that's the idea behind a derivative it might
+come with slightly different software or slightly different kernel configuration
+so at the ocf we use debian which was released in 1993
+and we use it because it's stable it's released a new version is released every
+two years it's … very user friendly it works out of
+the box we don't need to manually install … single package that we
+want to use
+and it respects the user's privacy which earlier versions of ubuntu would
+send your keystrokes in the search to amazon
+which obviously has privacy concerns
+uh it also incidentally has a cute naming scheme uh for each release
+it's named after a toy story character so
+the most recent stable release is debbie and buster the previous release was
+stretch and before that there's been wheezy
+for example etc and one of the best things about debian is that it's been
+widely used for decades now and so it's
+very much battle tested and that kind of helps build on the stability
+so once we have a distribution that we want to use
+we need to actually we may want to install extra software that doesn't come
+with distribution and so one way to do that would be a
+package manager but and so i've thrown on this word
+package manager but what is what is the package what is this package
+manager managing well essentially it's an archive or a
+bundle of files uh containing binaries which are
+programs you can run and libraries which are things that
+binaries depend on for applications so another way of
+thinking about it is just a fancy zip file of an application or a
+program you want to run um it also includes some other metadata
+or information not directly used for the
+application and this metadata exists to help the
+package manager deal with the application installing it
+uninstalling it configuring it etc and
+so a package is used to install an application onto a system
+on debian it uses the deb format and we'll go into what that looks like a
+little bit later
+so an important note that i would like to make is that installing a package
+from a file one of those bundles that i mentioned is
+directly comparable to installing from an exe
+or an msi on windows which is dangerous if you don't trust the
+source of the package so in general it's better to use
+software from the repositories which is an official source for programs on
+uh many linux distributions so you know of course use common sense
+if you're do you try to
+find software from trusted sources ubuntu has this idea of a personal
+package archive or ppa however these have the same risks as
+installing from a file because you have to trust the source to
+trust that the program is not going to install
+a bitcoin miner on your computer so how do package managers install
+packages well uh you have a user and they tell a package manager i would like
+to install a package for example let's say it's a text editor
+such as them so this package manager says okay
+i want to know information about them and it goes to the repository and says
+what information do you know about vim and the repository says oh well i know a
+lot of information i have all this metadata about what
+version it is and how to install it i have the package
+itself which includes the actual vim binaries
+that you would run and as well as any dependencies that the
+package may have and then this information gets sent back
+to the package manager so that the package manager can unpack
+the package and install it on your computer
+oh and quick note the rpm here is a package format for
+the fedora distribution so it's just another format
+so why use package manager i mean if you use windows you probably are
+downloading exes and you know installing them anyway so
+what's the big deal well there are several nice things that
+package managers do for you the first is it gives you very nice
+updating … and it makes updating very quick
+because it has all the information it needs
+to automatically … update a package for you
+essentially it if the repository has a newer version of a package
+then the package manager manager can say oh i need to update them so it can
+download the new package uninstall the old one and you have your
+updates and this is really critical for things where you have security
+critical programs running such as server program
+where any security exploits could be disastrous so this is a very useful
+thing
+so and more to the point packages in the central repository are reviewed
+for malware and this means that you can trust the
+packages to a greater degree and that they've been reviewed by humans
+so you're not just getting some program from somewhere on
+the internet it's a centralized source from
+trusted people and therefore you can trust the programs you get from that
+and then furthermore package managers deal with a lot of the configuration
+that you don't really want to think about like
+where do i install the program or which options for the program do i
+want to allow or disallow and um so so it gives you
+a lot of nice uh abilities that would otherwise be put on the user
+if you were using for example some executable installer
+so how do you use a package manager well the first thing that you
+generally do is update uh apt update so apt is the package manager
+for debian and ubuntu something that you'll find common among
+distributions and their derivatives is that they share a package manager
+but that's not universally true
+and so apt update grabs a new catalog of what packages are
+available for your local machine so it goes to
+some remote server and says give me all the information about all
+the packages that i could install it takes that information
+and now has that locally so that if you want to install
+something or you want to know the version of a local program it can tell
+you that information the next step the next thing you can do
+is install a package and so for that you use apt install
+and package name and similarly to remove a package you just apt remove
+the package name and that uninstalls the
+package so … another thing you can do
+is dist upgrade uh and that will upgrade all the packages on your computer and
+resolve any package conflicts or removals
+that exist
+you can also search which is a very useful
+tool apt search will list all of the packages that you can
+install remember that we pulled down a catalog of all the
+programs that the uh that the remote server
+knows about well we can search that catalog that we've now downloaded
+and find the name of the package for the program we want and sometimes
+things will have version numbers in them or they'll need
+dev for development files … and so if you run apt-install and it doesn't
+work then try an app search and that might
+help you find the actual package name because that isn't always
+the exact … it isn't always the exact name that you
+that you might think it needs to be so also if you want to install a local file
+again this is very dangerous if you don't trust the file
+itself so only do this if you know that the
+package file comes from a trusted source but you
+can do apt install dot slash and then the deb file for apt
+since they use the debian package format … so now i'm going to
+demonstrate updating and installing a package and the package i'm going to
+install is called cowse … so here i am
+in my personal staff vm but you're going to be on you're going
+you can do this on your own uh
+decal vms and so i am going to uh update … because i want to get the new
+uh the new package list the new catalog and there's a few things going on here
+so you can see hit a bunch of hits and basically what this
+is doing is it's going to apt which is the ocfs
+apt mirror we have a local copy for ourselves and also
+that others can use feel free to ask about using the ocf app mirror at some
+point if you're interested and so you can see that we have uh
+mirrors uh and it's getting this information
+there's like this in release stuff and basically what these things are is a
+list of all of the packages and
+so we're getting a bunch of package lists when we're updating which is
+exactly what we're we should be doing so now uh i want to install
+kausei um so i'm going to install
+case now … so we're going to get some
+information uh it's telling us oh these were
+installed but we don't need them anymore which is a nice
+thing for a package manager to tell you and it's and it's suggesting that we can
+auto remove but that's not really related to what
+we're installing it's saying we're going to install an
+additional package uh which is causee off
+and it's saying that all the new packages
+are going to be cause a and cal state off
+so we're not gonna upgrade any we're going to install two new packages we're
+gonna remove zero and not upgrade three uh and this is the
+size of what we need to download and so if i hit so there is a prompt
+there was a prompt here and if i hit y or enter at this prompt of do you not do
+you want to continue
+then it will continue to install it or i can hit n
+if i don't actually want to install cassay
+and so we're doing another get here and again going to mirrors and now we're
+getting kausei and cafe off which are the actual
+packages that we want um and then we're unpacking them
+and setting them up and seeing if anything else relies on them
+or has changes due to installing this and
+now everything it should be installed so if
+i say how say and then i want to have spaces
+in what i say so i'm going to use quotes uh cow say
+hello world
+the cow says hello world voila uh and you know maybe i use cal say
+and i realized that i i'm getting tired of using it or maybe i
+just don't have space i mean cal state is
+very small but for larger packages maybe i don't have space or
+maybe there it conflicts with another package so let's say i wanted to remove
+cassette well then i can run sudo apt
+[Music]
+and so it goes through a similar thing uh it's
+saying … uh the following will be removed and it lists the two packages and it
+says the two are removed and um and then it asks for confirmation
+again so i'm going to hit enter and you can
+see that it's removing the two packages making sure that nothing depends on them
+and now if i type calce hello
+um bash says oh there's no cow say it doesn't exist so it's been
+uninstalled and so this is kind of one of the nice things about package
+managers i can install something and then
+uninstall something and there's nothing left over from what
+i've installed because it knows exactly what it
+installed so … going back to
+the presentation
+so another way to install programs on a computer is to compile them yourself
+normally packages will have binaries or pre-compiled
+programs but sometimes uh the program is not distributed in a
+pre-compiled manner for various reasons um … so uh sometimes
+there is a a package that you can download from the web
+and that will have a make file in it uh and this is basically a description of
+how to uh build the program such that if you'll
+get a binary that you can run um … and sometimes they need things like
+the gnu compiler uh collection gcc … so if you want to use these
+generally … this needs information about your computer
+such as what type of processor you're using etc
+and so you need to configure the program to be compiled and so
+to do that it's dot slash configure which is very straightforward
+uh and then you can run make uh which is a program which will
+build your program and then make install will surprise surprise install your
+program unfortunately this can be really
+annoying to remove because nothing knows how … your program was
+installed and so … you have to manually
+go through the make file figure out what it installed and where
+and remove everything yourself which is a real pain so
+that's part of why package managers exist
+so we just talked about building a project and
+one of the integral parts of that is compilation
+um and compilation is basically taking some source code or
+code that someone wrote and turning it into
+an executable or something that you can run you can think of this as turning
+ingredients into a dish or taking a bunch of lego pieces and
+building a structure … and so an example of
+doing this would be calling gcc again the
+gnu compiler collection on hellopenguin.c which is a
+c source program code someone wrote in the c programming language
+and then the dash o flag says output as this name and the
+name of the program that we're going to output is hello penguin and this is
+something you'll be doing in your lab
+so once i have a program though you may be asking how do i get to a
+package well it's it's really a pain in the neck uh
+you have to either download or write the software that you want to package
+you have to make sure that everything is configured correctly
+you have to make sure that you've listed all the dependencies that your program
+needs otherwise it will won't run correctly you have to list the
+metadata so that it can be updated correctly
+and you have to make sure that libraries that are dynamically linked
+uh basically things that the program uses
+at runtime uh are installed correctly as well otherwise
+your program will crash which is not a great user experience so
+oftentimes people use tools to make this a little bit easier
+[Music] so … once so while we're talking about
+packaging a program it's important to know
+what the basic layout of where things get
+installed um so generally things get installed in slash user
+on the up up on the disk and um so executables and binaries
+which are the same thing basically um those are
+the things you run like calce or vim those get installed in
+user bin uh libraries which are things like
+the ssl library which browsers use to access websites securely
+those get installed in user lib header files are development things to
+say how to use libraries and those get
+installed in user include and then documentation and miscellanea
+get installed in user share and there's a similar layout
+you can set it up locally
+in your user folder um but if we look at a package for a
+package archive like dot deb uh we'll see that
+it's actually the exact same layout except there's also
+a little bit of information about metadata such as the version number the
+name of the author etc etc so that it can upgrade and
+do all that correctly but but the actual layout of the files
+is very similar because that's exactly what you want on disk once it's
+installed
+so in your lab you're going to be using the effing
+package manager or fpm which is a ruby gem ruby is a programming
+language and gems are the packages for the ruby
+programming language and uh this is basically a command line
+tool which makes packaging a little less painful
+so to install ruby you can add sudo apt to install
+ruby dev … and then to install fpm you can do sudo gem
+install fpm and so an example of calling fpm would
+be fpm-s which is the source directory for
+the package information so this is
+uh and then um dash t is the type for a deb file
+dash n is the name of the package uh and then dash v is the version for the
+package and then dash capital c here is as it says the directory with the
+user folder
+so if you want more information about this google is always a great source
+the fpm documentation is quite good and you can find it at
+the wiki link here the debian documentation
+is very detailed and has a lot of information about how
+debian packaging works it's a little bit dense but it's very good to read um
+if you can stand reading it and um yeah and so
+uh for your lab you're going to be uh installing gcc ruby
+and fpm and then you're going to be writing your own hello penguin program
+compiling it packaging it and installing it
+and so
+your lab is going to be due on the 13th of october just as a
+reminder and so with that i wish you all luck and
+i look forward to seeing you on tuesday or having seen you on tuesday

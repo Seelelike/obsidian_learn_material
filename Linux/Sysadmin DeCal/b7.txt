@@ -1,0 +1,199 @@
+Linux SysAdmin Decal b7: Services
+Subtitle
+hey guys welcome back to the seventh lecture of the linux system
+administration detail beginner track my name is kevin and i also go by chemo
+at the ocf this week we'll be talking about
+services and linux this week's content will build upon your
+knowledge of processes from last week so make sure to check that let's share out
+before watching this one all right let's jump in … first up what is
+a service a service in linux is a type of process
+known as a daemon and what a daemon is is a process that
+runs in the background of your system these daemons are usually
+non-interactive and are started by the system itself
+instead of an individual user often but not always
+you can tell a service apart from a regular process just by seeing if the
+name ends in d you might know a similar concept from
+background processes in windows or mac os
+such as app outdaters or antivirus utilities
+you might even already be aware of some famous services on linux such as sshd
+httpd from apache or nginx i'll cover some of the examples in later
+slides but just know that many programs rely on being able to be deployed as a
+service in order to function now what is the point of having a
+service first off services are designed to be run for long
+periods of time which is useful for long-running
+programs such as web and mail servers system-wide services and linux are also
+publicly accessible and can also be shared among multiple users
+they can also take advantage of system-wide resources such as networking
+one particular famous example is sshd which is a daemon that allows you to ssh
+into a linux machine for example it would be inconvenient to
+manually start up an ssh server every time you restarted linux
+so service helps take care of that problem by automatically starting one up
+in the background when you boot up finally the most important takeaway of
+services is that you can learn how to write your own service
+we'll see examples of how what a service looks like
+later on but in lab you'll be able to write your own toy service
+okay let's get to learning about the most important service in the linux
+machine the init service this is very often the first process
+that gets started when you boot up linux as the parent for all of the services in
+the system easily enough it has a process id of one
+you can try it yourself and see on your decal vm
+or on another lens machine by using h-top to view your processes
+and press f5 to see the tree in this screenshot you can see that
+systemd acts as the init service here with a process id of one
+and below this tree you can see that a number of processes and services are
+running under it
+as you'll soon find out system d is the most common system
+for managing processes in today's linux distributions
+in the context of this detail we'll be learning how to operate with services
+through the lenses system deep systemd also includes robust interfaces
+for operating and observing on services systemctl for example allows you to
+start stop cut the status of your services
+and also restart them … while journalctl allows you to check the systemd journal
+which includes logs on your services … of course being the
+monolith that it is systemd can be a controversial piece of software
+so there have been fours like devon from debian … that have
+replaced systemd with another init service
+lastly i want to show some examples of what a service can look like
+services under system d are written in a configuration file format called a
+systemd unit file within the file it defines how
+the service should act under certain actions
+for example when starting stopping restarting
+reloading and configuration etc let's take a look at a
+basic example
+now here we have a hello world service and
+this is a service file that we've written ourselves and you can see that
+it can be broken into three parts the unit section the service section and
+the install section under the unit section we describe the
+basic metadata of the service as well as include some
+other data on how the service depends on other
+services but for now we only have a description field
+and it says that we're a basic unifile
+over here we have the service section and this section mostly defines
+commands and how the commands will be run for example you can see here in the
+start parameter that will run a program under user slash bin
+called hello world … we also have a user field here that says that we should run
+this program under ocf staff of course there are many
+other exec parameters that you can include here … and that will
+change the way that the service will react to various systemcl commands
+lastly we have the install section over here we have a parameter called
+wanted by which determines when the service should
+get started and you can see here under this
+parameter we have a value of multi-user
+there are multiple different targets that you can specify here but
+in many cases for many services you'll specify
+multi-user.target … since it is the most common as it means launch this service
+by the time multiple users have logged in
+can log in without a graphical interface
+and you'll see in the examples that we'll show later
+that this is very common of course you can search up on the net
+or other targets that you can target as well
+here we have another unit file for engineers which is a very popular web
+server used in production by many companies
+today you can see here that we have our unit
+our service and then we have our install section again
+you can see that our unit section has expanded quite a bit
+we have documentation that links to demand pages or nginets
+and we also have this after field that says
+start this service after the network before the system
+has launched … and has finished setting up
+over here we have our service and you can see that there's a lot
+of z commands that you can specify not just at zetstart
+so we have our reset start pre restart we have our exec reload this tells um
+this is when someone … tells the service to
+reload the configuration … and so it will run this command to do it
+and of course we have a zetstop tells it how to stop engines … and we also have
+these other parameters here too you can see here we have our install
+section which is still wanted by the multi-user.target which still makes
+sense in this case
+now if you're going to be using services a lot in linux systemctl will be your
+best friend if you type in systemctl … into the
+terminal without any arguments you'll see that you'll get a lot of
+services back these are all the services that are
+running on your linux computer you can also see whether they've been
+loaded whether they're active and you can also see a description
+of each service
+you can also use systemctl status this is very useful for checking up on the
+status of individual services to see if they're running or not here
+you can see that nginx is running and you can also see a lot of different
+parameters here as well
+now of course here are some more systemctl commands that you should know
+here we have systemctl start and systemctl stop
+this stops and starts starts and stops a service respectively
+we also have systemcl restart which restarts the service
+and we also have systemctl reload which reloads the service's configuration but
+that does not necessarily restart it systemctl enable and system ctl disable
+do the opposite of each other and systemctl enable
+sets a service to start on boot now of course
+all this behavior is defined within the systemd
+unit file so
+is ultimately up to what the unit file defines
+uh for these behaviors but it'll generally do
+the things listed above
+now to wrap up this presentation i'll give a few examples of a few famous
+services that you might have interacted with before
+the first of which is sshd this is pretty common in a lot of linux
+machines but it basically allows you to start ssh sessions
+and not worry about starting a ssh server whenever you start up
+linux … you can see here that in this screenshot here we have an
+ssh session going on and this person is running bash and also
+running htop under that bash shell which is what
+you see here
+we also have examples of web servers for example
+ng-nets and apache are two famous examples of web servers that are used in
+industry so most of these services listed on port
+80 and serve content and these both are examples of
+applications that don't have regular
+interfaces the only way you can really interact with them
+is through a system ctl which allows you to
+start stop you know and check the status of these web servers
+and so you can see here that services are very very
+useful in applications … such as these where an interface might not make so
+much sense before we end this lecture i just want
+to show you an example of writing your own
+so over here i want to run my own self-servable … self-hosted
+font server here the way we run this locally
+is through flask run and you can see here that uh we run this
+app on localhost 5000 and if we refresh here and see that we have our font
+server up and running here pretty nice
+now it'd be pretty annoying to always run this flash run command
+every time i booted up my computer just so i could get a font server running
+so what i could do is i could write a service to do that for me
+so what we're going to do is uh take a look at a service that i've already
+run beforehand see here now we have our familiar three sections
+here the unit the service the install over here in the unit we have our
+description this drives us what service does and we also have this
+after parameter that tells it to run only after the network of the
+machine has been configured over here in the service
+section we have our working directory which tells it to run from where the
+font file font server folder is
+and we also have our famouses at start which basically starts uh the server
+using a more production-based serve
+and we also have restart always which tells it to restart whenever an
+error so down here we also have our install section
+we have our wanted by and of course we have the classic drum multi-user.target
+since it makes the most sense here
+now … in order for the service to get recognized by systemd we have to move it
+to a special directory so let's go ahead and do that so what
+we're going to do we're going to copy our font tiles service into a directory
+called slash etc systemd system … go ahead and do that and
+now what we can do is we can enable this service using a
+system ctl so let's uh
+go enable font
+see that has been enabled okay and what we can do is instead of running
+flask run or you know the production command that
+was in the service file every time what we can do system ctl
+start on tiles
+and we can check up on the status what it's doing
+now … see if i refresh the font server's still up
+go to various pages of it
+pretty neat … you can see you can see here our service is well
+inactive let's see you can see the logs here now
+if i ever wanted to stop it i can always do a system ctl stop
+and so that is just a quick demo of uh the power of services
+and hopefully you learned something pretty cool today
+i hope you learned this use this in your future projects as well
+and so i'll be seeing you in uh live lecture on tuesday we'll be going
+over how to write your own service for a minecraft
+server if you're taking this fall 2020 otherwise uh
+stay tuned for next week you're not sure all right thank you for watching and uh
+have a good rest of your week

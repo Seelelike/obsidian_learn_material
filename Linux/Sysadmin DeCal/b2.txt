@@ -1,0 +1,222 @@
+Linux Sysadmin Decal | Lecture B2 | OCF x XCF
+Subtitle
+hi i'm recording this a little bit later than i recorded the rest of the
+lecture i just wanted to make a quick point that
+i did go kind of very fast through the rest of this lecture
+so if need be remember this is on youtube you can pause
+uh you can change the video playback speed there are a lot of options
+and if you still have more questions you can show up at the live session so be
+sure to do that hi i'm nikhil and i will be your
+lecturer for today before we get started just some quick
+logistics you can find the associated lab for this lecture
+on the link that you see on screen and if you have any questions
+feel free to join the ocf chat network links are right there on your screen as
+well as you might have guessed today we are
+going to be talking about the shell with a focus on the terms that you're
+seeing on screen right now but first what is the shell so a shell
+or a terminal or a cui is just a way for you
+to use your computer uh what do i mean by that
+so when you start mac os or windows and you see the file manager
+and the desktop all that is part of a shell
+but what people normally mean when they say shell is what you're seeing on
+screen right now a simple text input where you type a
+command and you see the results of the command
+below it although this kind of shell is very simple it still allows you to do
+many of the things that you normally would use your computer for
+and maybe even to do those things more efficiently as you'll see in the next
+lecture if you're able to do something using the
+shell then you might also be able to automate
+it so you can be like this guy over here who has a job
+that he's completely automated using shell scripts
+he goes to work type something into his shell and 10 minutes later he's done for
+the day and with the shell this could be you too
+so how do we get access to a shell you're normally looking for something
+called terminal if you're on linux or mac os
+if you're on windows you'll need to use one of the ocf servers
+let's do that now to do this we're going to use something called
+ssh which lets you access a shell on a different computer
+if you do have windows the easiest way to follow along is to get this app from
+the windows store which lets you use the bash terminal in
+an emulated version of ubuntu linux we're using
+bash for this class there are other shells out there
+you can use whichever one you prefer but the assignments will be bash scripts
+so it's best to learn the most common way of using shell scripts
+if you're on mac os you can just open the terminal app where the default shell
+is zsh that's mostly compatible with bash so
+you can keep using it if you'd like but if you'd like to use bash which is
+the exact thing that we're using you can just run the bash command and
+you'll be using bash so if you don't already have an ocf
+account you can get one at ocf.io but assuming you do we can ssh into the
+ocf server by typing ssh and then your ocf username
+at … ssh.ocf.org dot u and this will work for any
+computer that has an ssh server running so
+for example if we want to ssh into tsunami which is actually the same thing
+as ssh we could change that … so when we ssh the
+first thing we'll see is that we have to check this key
+so ssh is encrypted which we'll talk about in a second
+um but ssh is just keeping you safe by asking you to confirm this the first
+time and every future time that you connect to
+the server it'll automatically check this
+based on what you've seen before so we say yes
+and then it'll ask us for a password when you type your password it
+won't show up here so just something to note you won't see the
+normal stars that you see in a lot of other password entries
+this is a common theme in linux passwords usually do not show up stars
+anyway so here we are in the terminal so we can run
+any shell command so for example echo just prints what you
+have typed so this will output hi as you can see it did everything you do
+over ssh is encrypted so if you want to know what that means
+you can take cs 161 but basically it means that anyone
+sniffing in on your internet traffic isn't able to do anything with your
+session so let's actually do something with our
+show and we'll start simple the two commands you see on screen are
+for copying and moving files let's get into it with a demo so let's
+learn how to work with files in a terminal
+so in a terminal you have a current directory
+which is where you will operate on files and you then type a command that
+operates in that current directory so to see what the current directory is
+it normally shows it here but we can type pwd to figure out the
+full path in case your shell does something fancy
+and shortens it to see that list of files in the current directory you can
+type ls as we can see we have no files to create
+a file we can use the touch command and we'll make a file called demo so now
+when we list the files we have a file called demo to change the current
+directory we can use the cd command to change to the current directory we
+would do cd dot as you can imagine that doesn't do
+anything we're still in the same directory
+to go up a directory we can type cd dot dot
+and as you can see we are now up one directory
+and to go back we can type the name of the directory that we want to go to
+and we can copy our demo file which is still here
+to another file called demo2
+and we can move our demo file which in this case is renaming it from demo to
+demo one … and as you can see that works as expected
+if you don't know how to use a command you can use the man command
+which is short for manual so for example man ls
+will tell us how to use ls … to move up or down you use
+jnk and then to leave this window you press
+q … here are some common ways of referencing a file
+let's get into it with a demo so our file demo one here
+we can call demo one so please cp demo one two demo two again
+that works or we can do dot slash demo one
+which means in the current directory the file called demo one
+which is a bit redundant but it's another way you can write it
+we can also say in the previous directory
+uh in a folder called decal in a file called demo one this will also
+do the same thing and we can also do the full path
+so if you remember the full path for a current directory is all of this
+so if we copy all of that to uh demo one or sorry it'll be
+copy demo one with this full file path to demo
+2 then that will also work all of these names are equivalent in this case
+so all of that was just basics but one of the really cool things about the
+shell is that we can chain these commands
+together so what i mean by that let's look at an
+example cat is a command to output the contents of a file so here
+we're running cat on a file called people names and
+the contents of that file is being written to something called standard
+output which our terminal helpfully shows us on
+the screen so we can see what's going on grep is a command that looks at standard
+input and searches that for certain text
+so if we use cat and then we use a pipe and then we use grep we can search the
+contents of an input file what the pipe does is it redirects
+standard output of the command of the left
+to standard input of the command on the right and you can see how this would be
+helpful in this example where we are searching our listed people
+for people named anna we can also redirect to and from a file
+so the right angle bracket will redirect the standard output of a
+command to a file and the left angle bracket will read a
+file and paste it into standard input for you
+so in this slightly confusing example we are searching
+for anna in the file called people names and writing the list of all the people
+that we found named anna to a file called output.txt
+so just as another quick demo we can check what's inside
+our demo one file with cat and then if we want all the lines that
+include the word cat we can grab that for the word cat
+and it will hopefully even highlight those words
+for us and if we want just those lines that contain
+cat and another file uh catted lines
+then we can do so except it doesn't stir the highlighting this highlighting is
+just something that you see in your terminal
+and is a special feature next we're going to talk about editors
+so these allow you to edit text from the shell
+three common editors that you'll find are vim emacs and nano and today we're
+going to be going over vim why use one of these editors as
+opposed to notepad or another gui alternative
+sometimes you just won't have access to those tools for example if you're
+editing a file over ssh … also studies have proven that you
+are 38 smarter if you use vim
+disclaimer that's not actually what this graph says but
+so why vim apart from making you 38 smarter
+a version of vim is available on nearly every computer you're going to use
+unless that computer runs windows and also vim has a bunch of shortcuts
+that make editing text really really efficient
+so we have this demo1 file but how do we actually edit this file
+so we can run vim on it so once we're in this file we can use the
+h j k and l keys to move around so l is right h is left uh
+j is down and k is up um it seems a little bit confusing
+at first but you'll get used to it in no time
+you might be wondering if h j k and l are letters uh can you just not type
+those letters what's going on and the answer is that vim actually has
+two modes there's normal mode which we're in right now and it lets you move
+around and there's insert mode which we can get
+to by pressing i which we'll do here and now i can type
+whatever i want at the position that my cursor was at
+we can also enter what's called visual mode by pressing
+v and then we can use htkl again to select text um and then we can
+run something on that selected text so for
+example to copy it we press the y for yank and then to paste it let's
+paste it on this blank line we press p as you can see the text that
+we copied up there has been pasted there are a lot of shortcuts for vim
+a few of them are capital g to go to the end of the line lowercase g
+or capital g to go to the end of the file lowercase g to go to the start of
+the file dollar signs go to the end of the line
+and zero just go to the beginning of a line
+i could go on for days so if you want to learn all of them
+you should try out vim tuber which will teach you all this
+in excruciating detail uh i miss the most important part
+to save what you've written as you can see we didn't save
+uh you type colon x when you're in normal mode and as you can see we're
+typing down here when we type a colon you can also do wq
+which stands for save and quit but x is a shortcut for that
+if you don't want to save you do q and then to confirm you press an exclamation
+mark and the last tool i'd like to show you
+is called t-mux t-mux lets you have multiple shells open
+at the same time and also lets you keep those shells
+running even when you're not around by attaching and detaching from
+different shells okay so to start tmx we'll just run the
+tmx command and we'll be dropped into something that
+looks almost like our normal shell except we have this bar
+at the bottom uh that tells us that we are using
+session zero and we are on tsunami … from here we can
+do anything we can do in a normal terminal
+it is in fact a normal terminal uh but we have a few extra features so
+if we want two terminals we can press control b and then a percent sign
+and it splits it uh horizontally and then to move between these we can do
+control a and an arrow sorry control b and an
+arrow key to move between them and we can run it
+in here and then we get bored of this side and we go over
+here and another command this is useful if you are a super power
+user and want to do multiple things at the same time
+or maybe we are transcoding a video which we will do by waiting 20 seconds
+and we don't want to use this shell anymore
+so we could have split it and then we can just use the shell
+over here … uh we're still good and we can watch our video trends code progress
+or we can do something called detaching which
+we do with control b and then press d and we will have detached
+and then we can use our main shell and to attach again
+we can do tmux attach dash t and we need to remember
+the number of the terminal which was zero
+and we're back to exactly where we left it
+you can also do tmuxls to list all the sessions currently running
+and remember you can always find out about a command using the man command so
+if you want to learn more about tmux mentee mugs
+if you'd like to see how to do more interesting things on the terminal be
+sure to show up on tuesday at eight where we'll be going
+over how to do some other interesting things with the terminal
+including compressing videos for example when
+discord won't let you send files over a certain size
+so you need to make your files smaller or whatever other suggestions or
+questions that people have so if you want a chance to ask questions
+live that's the place to do it so again if you have any questions see
+the beginning of this video for resources
+and good luck and have fun on the lab

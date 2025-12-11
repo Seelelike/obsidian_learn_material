@@ -1,0 +1,790 @@
+Linux SysAdmin Decal a6: Networking 102
+Subtitle
+i will be teaching networking 102 for the linux 7 decal
+fall 2020 i am an alumni of the open community facility i graduated from
+berkeley in 2019 and since i work at facebook as a
+production engineer on news feed so let's get started
+we're going to be talking about networks how they're modeled addressing them
+how they're configured different protocols that are available and
+specifically the tools that we use as a sysadmin for
+building configuring debugging and otherwise interacting with networks on
+linux specifically debian linux although the
+applications the principles are broadly applicable to any other distro that you
+want so let's start by talking about the osi
+model which is a conceptual model of how networks are architected and built and
+this is the theory behind how networks are supposed to operate
+networks are fundamentally layers the way that
+modern computer networks are built are as layers of abstraction
+each layer communicates with the corresponding layer across the host that
+it wants to communicate with upper layers abstract lower layers and
+vice versa and like concretize upper layers
+it's a conceptual model it doesn't necessarily map to reality
+uh for example you know the networks were originally architected back in the
+80s and in the 40 years since a lot of things have changed
+other models exist like tcp ip which is a simplified version of the osi model
+um but the theory that is the theory of this osmol is still
+very applicable to understanding networks in
+2020. the packet path uh from here you can see in this picture that the
+seven layers of the osi model starting from the top are application
+presentation session transport network data and physical
+when communicating from one computer from one host to the other
+the packet path starts from the top to bottom from the application layer to the
+physical it gets to the other host and then it
+goes back up from bottom to top physical to application
+so let's start by looking into the assignment layers themselves we'll start
+from the middle the first layer is the physical media
+the bits actually have to get from one computer to the others they have to be
+connected somehow … at this layer we have communication from one physical port to
+another or like a wireless antenna from one
+wireless antenna to another here we have actual physical copper
+cables lasers that are used for lasers and fiber optic cables for laser
+transceivers radio waves you're probably familiar
+with um 802.11 wifi like why wireless and
+wireless ac wireless ax i think is the most recent
+one
+those are all physical layer physical media
+protocols that operate at layer 1 of the osi model
+if you're interested you can look up what line codes are they're ways of
+recovering clock information for because multiple the same cable can
+have multiple speeds um and needs to do error correcting at
+the physical layer for you know digital and for analog signal
+attenuation noise and stuff that comes into these things
+abstracting up from the physical layer we have layer two of the data link layer
+at this layer we are communicating from one network interface card to another
+a network interface card is a low-level hardware interface to physical media
+so it'll be like the thing on your computer
+that you plug the ethernet cable into or like the pci card behind that port
+itself at the at layer 2 we have something
+called mac addresses media access control address this is a
+48-bit address the first 12 bits are like specific to certain manufacturers
+so you can like type in the mac address into
+there's a like look up websites so you can see which manufacturer made like a
+particular port or particular piece of equipment
+these are like kind of hard-coded into devices they're supposed to be unique
+globally but what's really important is that they're
+unique for any uh device for all devices that are on
+the same layer 2 broadcast domain have a unique mac
+address so that they can communicate with one
+another uh using local routing over physically connected nodes
+so if you have two computers that are connected to another the only thing that
+you need to for them to communicate with one
+another is layer two and if you have multiple computers that are connected
+over to one another over a switch as long as they all have unique mac
+addresses you can still communicate with another because that's enough layers of
+uh that's enough disambiguation between one host from another
+for the switch to make a routing or a switching decision
+where uh if one host wants to communicate to another across the switch
+there are some protocols of this layer such as arp and ndp erp is address
+resolution protocol which is used in ipv4 for finding
+the mac addresses of your neighbors and ndp is the equivalent for ipv6 neighbor
+discovery protocol moving up one layer of abstraction we
+have the osi liners that are in the kernel themselves
+so this is the network layer and the transport layer what we're doing at the
+network layer is communicating from one logical host to another
+if in layer two we were connecting from one physical host
+to another physical host we now want to connect to a logical host
+so … the difference is that we can have multiple physical hosts per
+logical hosts or vice versa what the network layer allows us to do
+is go from the local addressing that mac addresses gave us to global
+routing and global addressing so now we can
+communicate with computers that do not share the same
+you know physical they're not linked to one another over the same switch
+the network layer doesn't offer any reliability guarantees the network will
+try its best to deliver packets um at this layer but if it can't
+it's on it's the responsibility of another layer
+to retry or otherwise
+provide a reliability guarantee the primary protocols that are
+operating at this layer for example are ip the internet protocol version 4 and
+version 6. there are some others that are used in
+uh like legacy environments or in specialized environments like x25
+um but also we have things like icmp the internet control message protocol
+uh rip or routing information protocol other such things that are used for
+controlling networks themselves that don't have access to higher layers
+of the protocol stack just quite yet or are
+useful for debugging at the network layer
+above ip we have the transport layer what we're doing here is communicating
+from one service to another if we think about it we had multiple
+physical multiple logical hosts per physical host
+or vice versa now we have multiple services on the
+same logical host you can think about this as you know we have multiple
+processes running on the same server and each process wants
+to be able to communicate independently of every other process so we need a
+layer of abstraction here or a layer of disambiguation here that's
+what layer 4 provides we have multiple options at this is the
+layer where we start to we begin to have reliability guarantees
+for example you can have a reliable connection oriented protocol like tcp
+or a connection less protocol like udp if you just want to send packets across
+the wire this multiplexes several services into a
+single logical address using things like sockets and ports
+and then above that we'll skip layer five and layer six because they're not
+really important or used anymore and we'll talk about layer 7 the
+application layer what we're doing here is communicating from application to
+application for example you know your web browser
+speaks http which is an application layer protocol to a web server that also
+speaks http that is connected to via overport 80 via tcp a transfer
+protocol over ipv6 near protocol and over wi-fi
+which is your link of course at the web server layer
+there's probably a whole mess of fiber optic cables that
+are connecting um the server to
+the backbone network and from there to you know all the way down to your isp
+which then you know you plug your cable in the wall
+to and that broadcast wi-fi in your home but this is all how the magic of the
+internet works so let's start talking about the layers
+and tools that are available at each layer
+at layer 2 this is the actual hardware that lets you
+connect to network or in the case of virtual machines that could be like
+virtual hardware but it essentially works the same way
+we have the port and cable itself so for example for ethernet or
+infiniband there's many protocols that are operating at the
+protocol like or hardware types that are operating at the l2 layer
+antennas these things the the interfaces that are
+at the l2 layer might correspond to many things on linux it could be
+corresponding to physical network interface cards virtual devices
+the loopback interface on linux virtual bridge many things like that but
+the critical thing is that each network interface is associated with the mac
+address that you can use to communicate with that device across
+that device with on linux interfaces can be link layer
+interfaces can be listed through the iplink command
+they'll have many names like you know sensible ones like en01
+less sensible sounding ones like ens50 f1 d1
+or whatever system d decides is a predictable interface name
+um … so you can kind of tell like enos probably is like an ethernet
+interface wlp9 s0 is like a wireless interface
+yeah … so let's take a look at the output of iplink for example on one of
+my machines you can see that there are five virtual
+there are five interfaces listed here we start with uh
+this is the first one the loopback interface which returns which when
+packets are sent to it returns them back to my machine
+um we might think of this as the the way in which like the 127.000.1
+a local address is implemented we have my wi-fi card which is wlp9 s0
+the ethernet on my motherboard enp10 s0 and then we have two virtual
+interfaces which correspond to vpns that i had configured at the time
+if you look at the output of this command you can see that
+for example if it has up listed in the flags that means that the logical
+interface is enabled in the kernel um so you can disable this by doing ip
+link down and if lower up is in the flags list
+that means that the physical interface is on
+like the cable is plugged in and the signaling at layer 2
+is working so uh for example in enp10 s0 you see that it's up but it does not
+have lower up because i don't have a cable plugged in uh and that's why it
+says no carrier because there's no signal
+there's not going to be any firm because there's no wire plugged into it
+the protocols we mentioned earlier there's things like arp
+that operate at layer two so what is arp and what are mac addresses
+i mentioned earlier that these are hardware level addresses that allow
+multiple physically connected nodes to address and talk to one another
+they're composed of 48 bits there's a broadcast address so if you wanted to
+speak to every physically connected device on your
+local network you could send a packet to this broadcast address
+and your switch would configure it to send it
+flooded across all your ports the first three octets
+are this organizational unique identifier
+you can go to some websites you can type in like mac address lookup
+and if you type into mac address you can figure out who manufactured that
+particular device mac addresses are not like necessarily
+tied to hardware itself you can spoof them if you're so inclined
+which is useful in some cases and in other cases for example like on
+iphones apple will randomly generate mac
+addresses for privacy purposes so when you connect to new wireless networks
+you'll connect with a randomly generated mac
+every time to defeat some types of uh tracking and surveillance that take
+place uh one thing that's important at this layer
+is even if two machines are able to physically communicate
+uh they know that one another exists at the other end of a
+cable they need to know what that logical address is so that they can do
+global routing so to do that we have arp address
+resolution protocol which converts a logical address to a
+link layer address and therefore vice versa
+this is what allows the interface between global and local routing
+as a implementation detail the kernel caches
+uh answers to the address resolution protocol for 60 seconds
+otherwise it would constantly flow the network on every request
+for packets to go across
+when the way it works is that when a computer receives a request to forward a
+packet to a logical address with unknown physical
+address because let's say that it has received a request from
+the internet uh and it knows that all the the packet that it's received
+has a logical has a logical address like an ip address
+um we know that we want to we know that by based on the subnet that
+the that host probably belongs to us but we
+need to know what its physical addresses we so we can know what port to send
+that what physical port to send that packet out of so we send an arp
+request and then the machine will broadcast this
+to the next hop on our routing table and hopefully they'll get back to us
+with a response that says this is the physical address
+and this is the port that you can send this uh … request this packet to and then
+we store that information so for every other packet coming down the line for
+that address we know how to send it to without having to do another
+lookup … so you can use the arp command to look up
+the entries in the systems arp table ipna is another equivalent you can use
+um the flags are shown on the slides this
+data is actually listed in proc net app we'll talk about the proc subsystem or
+the proc net subsystem later on but if we take a look at this
+for example by running rpe on one of these ocf
+desktops we see that we have a listing for
+dementors.ocf.berkeley.edu over ethernet and it has a hardware
+address that starts 5254 008616 f6 … dementors
+is a server that we use for monitoring and serge is a desktop
+they're both physically connected to one another across a switch so this is why
+uh the address for dementors is in the arp table for this desktop so
+whenever this desktop needs to send monitoring
+information it has it knows how to send it
+which port to send it out of which for the desktop will be immediately the port
+that it's connected to but for the switch
+that is receiving this connection on the other side by
+looking at the hardware address that is in the packet it knows
+which port to send the packet out from on its end
+in order to configure interfaces at layer 2 we have a couple commands iplink
+as mentioned earlier is the main one you can set the interfaces up or down to
+enable or disable them you can add or delete them uh if
+necessary sometimes for adding bridges or virtual interfaces or
+something like it's useful to manually add an interface and sometimes when
+they're dis like misbehaving you want to remove them
+so that you can re-add them static configuration for this stuff on
+debian lives in a file called etsy network interfaces
+on red hat derivatives it lives somewhere else
+on some system d machines their systemd has its own
+network configuration language that lives in etsy system systemd network or
+at scene system system yeah something like that and its
+own configuration protocol that is beyond
+scope of this particular class but you can look up the documentation
+uh elise if you are on debian we'll briefly explain how etsy network
+interfaces work you can cap this file on your staff vm
+or your student vms and you can see how the
+network is configured for your virtual machines themselves
+um … just briefly going through what the syntax of this file means
+auto means that we want to activate this particular network on boot
+the iface stanzas themselves represent the configuration for
+the things so for example uh on this desktop
+we configure the interface eno 1 to have a stack static address of 169 229
+226.127. the netmask is configured to be a slash
+24 so the last octet or the last um uh eight bits are left as zero and then
+the gateway is the upstream router for in the ocf
+169226.1 and similarly we configure ibv6 static
+addressing scheme so one physical interface can have
+multiple logical interfaces for each protocol um and here we see
+an ipv6 address the net mask and the gateway
+as we … did earlier there's some other configuration methods like
+you can set up hooks for doing pre and post processing this is useful sometimes
+when you want to set up like ib tables firewall rules when
+new interfaces come up but we won't cover that right now
+moving up one layer at the logical layer so our logical network layer
+this is where we start to talk about ip addresses
+the command that's used for interfacing with the
+layer 3 on linux is ipadder because … we're starting to use these
+logical addresses we can have multiple logical addresses
+per layer 2 interface as we kind of noticed earlier
+we can have ipv4 and ipv6 address we can also have
+multiple ipv4 addresses you can kind of see
+that in the in this picture and we can associate
+multiple layer two interfaces through a bridge
+so that we can map multiple virtual mac and ip pairs into a single physical
+interface this is how virtual machines do their networking many times
+we'll have many virtual machines each one will have its own virtual
+nic each virtual nic will have an ip address assigned to it so that
+any other machine in the network can communicate with them but the server
+itself that's hosting these vms will only have one physical port so we need a
+device that can bridge these virtual devices into a
+physical device and that's something that is done
+using bridge types you can see here interface 4 is br0
+it's a virtual bridge and it will have multiple sub interfaces associated with
+it
+let's talk briefly a bit about ip addresses themselves
+um ip addresses are 32 or 128 bit addresses
+um that identify devices that are connected to an internet protocol
+network ip is the most common network um it's unless you're working in like a
+field that does something special like high frequently frequency
+trading it's unlikely that you'll run into
+uh internet protocols that are not or network protocols that are not ip
+or legacy stuff ip addresses are written in what's called a sitter format
+um … they are delimited by each so each octet is delimited by a
+dot um … uh you can see like like the address
+127.001 which represents the home or like the self-referential
+address on computers is corresponds to this like
+binary representation um that i will not read out uh we
+partition blocks of addresses into networks via
+what's called a net mask if you think about like a 32-bit address there's like
+4 billion addresses that could take place and we're not about to store
+a list of four billion addresses on everybody's computer
+so we need a way of breaking this down and we do that via these things called
+net masks so each uh each individual computer network is
+assigned a block of addresses and we represent those blocks via these
+numbers of bits that are in the portion the network portion of the block the
+remaining bits identify a host within the network so
+for example in the 169 2226
+24 network which is the ocfs ipv4 network the first three octets represent
+uh how does how to represent the ocf as a network and then the last
+uh octet or 256 uh 255 i should say uh numbers or pop
+uh possibilities or that we have represent individual hosts within the
+ocs network so for example 169 2256.1 is our upstream router 126 once uh dot
+100 is like a virtual machine or a desktop
+in our network um when a community when a
+server from outside our network is trying to communicate with a server
+inside our network we'll begin by sending a packet to
+the nearest the longest prefix that it knows about at the routing layer so for
+example we are allocated the 226 block by
+uc berkeley which announces 169.229 slash
+16 … to the other networks that it connects to when
+they find a when they want to send a request to one
+of our addresses they'll see that the closest thing that they have the
+closest match they have in their routing table is for 169 229
+which matches you know like two-thirds of or at least half of this address
+um that they're looking for so they'll send the packet down to uh
+across the port that represents uc berkeley at the berkeley router layer
+they'll see that they have allocated the slash another slash another eight
+bits of address to the ocf um and they will send the ports
+for anything with two to six in the address
+down the particular port that represents our router
+and once it reaches our router and our switch local routing takes over
+the server a the switch will receive a packet
+if it doesn't know what physical address corresponds to the
+ip address it will make an arp request find the
+uh appropriate server and then send the packet down the correct physical port to
+that uh server which will then do the in
+decapsulation process for sending the data to the server or
+the service that requested it the broadcast ip in this
+uh case if we wanted to send a packet to everything within a local network
+is … 255.255.225.55 it's not like you could send a packet to
+this address and have it sent to all four billion ipv4 addresses in the
+world um at the protocol level at the
+implementation level this is limited to things that are in your l2 broadcast
+domain so if you send a packet if you send a packet to 255 255 2555
+it represents it'll actually get sent to uh the
+l2 broadcast address underneath so it'll only get sent to things that are in your
+l2 broadcast domain or things that are like in your physically connected
+network
+in order to manage layer 3 addresses we can manipulate it via the ip adder
+command so you know if you do ip adder it'll
+show you all the layer 3 information or if you specify an address or an
+interface it'll show you the layer 3 info for that interface
+you can add delete addresses frequently we have to do this for
+if we want to add additional networking we want to bring traffic to a particular
+device or we want to remove traffic we might add or delete an address you
+can show the routing table which is how the linux kernel decides where
+and whether to receive traffic and where to send
+traffic for addresses that it does not recognize or know that it owns
+by using iprout and ip-6 route for ipv6 routing tables
+the way if we wanted to add a routing rule to allow us to do some kind of
+global routing uh beyond the defaults we can add
+we can manually add routes cases in which this would be useful for example
+are if you have a … let's say you have a vpn
+that … addresses out of a particular private range
+on your internal network you want machines that do not have a virtual like
+a vpn connection to be able to communicate
+with the vpn you might configure that machine to forward all of its
+traffic to your vpn host and you might configure your vpn host to have a route
+that … causes all incoming traffic for uh ip addresses that are in the virtual
+private networks routing space to be sent over the
+device that represents the vpn
+this can be useful sometimes for using like a single host to
+enable connectivity through a vpn for an entire class of or like an entire
+layer tune network
+when we connect new machines to networks it's unlikely that they have any ipv4
+configuration and we'll need a way of bootstrapping
+this so that the computer can talk to other hosts on the
+network without having to like manually statically assign addresses so for do
+this we have something called dhcp dynamic host configuration protocol this
+is a way for devices to receive ipv4 configuration information from the
+network itself ips are released from a dhcp server to
+individual clients to prevent collision because if two servers
+if two clients were to expose the same ip address ipv4 address they would
+both respond with different mac addresses to the same
+arp request which would cause confusion for
+a service that's trying to send traffic to a particular server because it would
+have two destinations and that doesn't work
+6 has multiple equivalents for dhcp like slack which is stateless link auto
+configuration dhcp v6 etc um that's
+all stuff that you can read about later when a client requests
+dhcp when it connects for the first time what it'll do is a l2 or l3 broadcast so
+it'll send a ping out on or it'll send a request out
+on this uh ipv broadcast … address which gets
+converted to an l2 broadcast address and if a dhcp server happens to be on
+the same subnet it will return … after the protocol is
+complete an ipv4 address that has been assigned
+the network mask the address of the first hop
+so that the default routing rule on that server can be set
+or on that client can be set and possibly dns servers for
+the client to use to find names of hosts in the local domain
+so if you want to manipulate dhcp the there are a couple tools that are
+available um namely dac bcd and dh client dhclient is deprecated but
+still useful in some specific cases uh for example dhclan allows you to
+specify whether you want to get an ipv4 ipv6 dhcp request
+whereas dcpcd will try both and if one doesn't work
+it will fail entirely and release your leases on your ipvs
+so let's say for example you have a network in which ipv4 is not working and
+you only have ipv6 it may be necessary to use dh client to
+get an ipv6 only to only get an ipv6 dcp allocation
+rather than failing because of the lack of ipv4 dhcp response
+dcbcd also starts a demon that will attempt to renew license in the
+background so if you want to get a new license
+you'll need to restart the daemon just a tidbit … the other thing that we
+talked about briefly was dns servers so the dns is the domain
+name system this maps human friendly names to ip addresses uh
+it's not possible for most people to remember things like 169 229226.100
+corresponds to surge or whichever desktop it is in the
+ocf so that's why we have nice human-friendly names like
+search.october.edu the way the dns works is that a dns
+resolver will send a dns query to a dns server to get an ip address for name
+so uh there they can this can either happen recursively or
+iteratively um but the resolution takes place
+uh right to left growing in specificity of
+the name so for example nix.ocf.berkeley.edu
+edu is the least specific name uh we'll begin by or i should say dot
+is the least specific name we begin by requesting uh
+all the name authoritative name servers for that the 13
+root name servers of which are hard coded into every operating system
+[Music] from there we will get we'll query that
+root name server it'll return authoritative server a dns server for
+the edu zone from when we query that server
+we'll get an address for berkeley ddu when we query that name server we'll get
+an address for ocf led and then when we query
+that name service the ocs name server will finally get an address for
+next.oscu resulting in 169 226.231
+dns records themselves are stored in what's called a resource record which is
+a tuple of name value type and time to live
+there are many records the most common ones are for example an a record which
+maps a hostname itself to an ipv4 address so
+the tuple the reset record and this name being the
+uh host name itself the ip address that corresponds to it um
+the type which is a and then the time to live the time to live being important
+because sometimes when we want to update uh ip we want to
+update names to ipv4 address matching we still want to cache on the client
+side because it would be too expensive to make a dns request for every single
+packet or every single name that we uh query for so but we needed time to
+live so that clients know when to invalidate their caches another
+common resource type is ns or the record the authoritative
+name server for a particular zone um and that is
+the the resource record in this case being the domain
+name uh or the zone for which … this uh
+authoritative
+for which this response is saying that a particular server is authoritative for
+and then the name of the dns server for that domain uh
+a records for example map host names to ipv4 addresses aaa records map them to
+ipv6 addresses which you can see because the ipv6
+address is six four times as long as the ipv4 address
+at the dns layer we have several tools available
+the most common ones are like dig host dig is a
+very commonly used tool for investigating dns information
+you can see here for example if we dig instant east berkeley to eu
+we get a comprehensive answer from and the full query output as well
+these the question we requested was uh what is the value of instanti inside
+each.berkeley.edu in the a record for the server
+the answer we got was 128 3242.199 we also got this additional information
+like who was the authoritative name server that told us this information in
+this case it was adns1.berkeley.edu and there was also four other options
+that we could have queried for if we needed to um
+and the additional section is the values of those
+the addresses of those name servers um other
+useful tools are like host if you type in a domain host will tell you a brief
+um summary of the dns information like what addresses it correspond to if it
+has mail configured if you are running a dns server useful
+commands are like rndc reload for reloading at least if you're
+running bin9 as your dns server for reloading the zones a zone is a
+record as a collection of dns resource records that
+in total represent the
+knowledge or the dns information for a particular domain
+and then nscd.i is the name service cache daemon
+dash i is to invalidate so if you want to like let's say you have updated a dns
+record and it's not showing up on your computer
+you may want to invalidate your local dns cache
+so that it's forced to pick up fresh records
+regardless of the ttl setting on debian unlike all almost all
+operating modern operating systems there are dns configurations located in
+etsy hosts which statically associates ip addresses with hostnames you may have
+recognized this from various like ad blocking techniques for
+adding advertisers urls to etsy hosts and mapping them to 127.001 so that
+requests them … will always fail uh giving you an ad free experience um
+the syntax for this is to like is a simple list of ip addresses followed by
+the host name and aliases um and this is
+also where the local host name is mapped to 127.1
+or the address that's associated with the loopback address on
+linux and on windows and every other os as well
+etsyresolv.conf is where is the file that configures the libc dns resolver
+you can specify a search domain which is like for example in the ocf if you type
+in ssh search you will need to type in the
+entire full canonical name of the service you can just type
+say search and the search domain fills in the that the default would be
+ocf.edu if the full fully qualified domain is not specified
+you can also specify the name servers that you want to use by default
+and any number of various options on systemd
+enabled machines uh systemd ships with its own dns resolver called resolve d
+and the files for configuring uh systemd resolved
+are located somewhere else like an etsy system systemd
+network or systemd resolvd.com
+going up another layer uh if layer 2 pushes physical bits across the
+wire and layer 3 abstracts bits into packets and frames layer 4 abstracts
+packets and frames into connections we have tcp which is a connection
+oriented reliable in-order transport and also the vast majority of
+connections made today are done over tcp and we have udp
+it's connectionless unreliable and not in order you might ask why
+udp is why would we want a connectionless or unreliable protocol
+but there are useful … elements for this that we will talk about in a moment
+when we're creating a uh socket for layer for transport we can
+specify which type of connection we want or which protocol we want
+by um uh when making the socket sock stream and
+sock d grant being the configuration options for tcp and udp
+themselves so let's talk a little bit about the protocols tcp or transmission
+control protocol … is stateful stream oriented and ensures reliable transport
+what that means is that uh when two systems when
+two computers or two hosts want to talk to one another over tcp
+they have to establish some state they create this handshake or the four-way
+tcp uh … handshake to start
+also called the the three step if you consider the
+next act to be uh [Music]
+sorry
+there's a handshake that's uh when two hosts want to communicate with
+another they have a they initiate a handshake to start and then both
+hosts will store the state about one another so that they can
+make sure that they are able to communicate with one another in a
+reliable fashion and reassemble if packets get delivered out
+of order or packets are missing uh the state that
+they store which is the uh sending and receiving ports and
+addresses will allow and the sequence number from
+the tcp the last received tcp packet along with some congestion
+control information will allow uh … the allowed tcp to have these
+reliability properties there is some overhead because each
+connection requires some additional memory to store
+the data for um but it is good for use cases where
+receiving all data is critical which is most use cases because we don't want to
+lose data there's a lot of literature about
+congestion control in tcp optimizing tcp you may have heard of
+google's congestion control protocol bbr there's tons of research and academic
+interest in optimizing tcp because it is the
+protocol over which the vast majority of internet traffic travels today
+udp on the other hand is stateless connectionless
+datagrams are just data that a system will throw across the wire on
+the other end the the others the computer on the other end
+of a udp connection is not warned in advance or you know
+told set up in advance of receiving packets it just receives packets
+what this means is that there's no startup or termination overhead like
+there is with tcp where you have to incur some latency and incur some memory
+usage in order to start a connection the downside is that you have no
+guarantees at all uh with udp messages or datagrams packets
+may arrive out of order they might not arrive at all
+the system doesn't know whether uh it received a particular packet or not
+the headers themselves are very simple but there's surprisingly many use cases
+in which this is perfectly fine we don't care about we don't care if we
+miss certain packets we care mostly that
+we're able to get a large number of packages across the wire
+for example if you're streaming music or watching a streaming video or something
+like that you're not going to miss uh if like a
+small little bit of the music skips or a
+couple pixels of your video go away so
+what's most important is that the vast majority of those packets get to you on
+time and in these cases things like tcp
+congestion control or the latency that tcp
+incurs in order to make sure that everything arrives and is reassembled
+and sent back up the stack in correct order might be too much and
+might inhibit your experience as a user so we send these
+things over udp for example uh netflix will probably
+send its traffic or the video traffic to you
+over udp because it's not necessary it's okay if
+like a couple frames have some mismatch elements or
+missing elements or stuff like that you probably won't even notice because
+of how fast it's going and your brain is pretty good at filling in all this stuff
+for you even if the data itself is actually missing
+the way that tcp and udp work this is where we talked about ports and sockets
+briefly earlier a port identifies a service endpoint on
+an l3 address so that this is where we get like port 80 on
+uh you know your ip address uh port 443 for ssl
+uh port 22 for ssh um a socket is what is the internal endpoint for
+traffic so this is what the operating system uses internally to associate
+a … um a particular service
+or process with a ip address and port number
+it does this via the holy five tuple of information which is protocol source
+ip source port destination port and destination ip these five
+pieces of data and the sockets that are on each side so one on the sending side
+and one on the receiving side represent the networking information
+that the operating system stores um outside of the congestion control
+information that the tcp protocol might store for example
+uh to store knowledge of the existence of a
+layer 4 … protocol or a connection between two services
+let's talk a little bit about the internals and the procnet hierarchy for
+example this is where networking information is
+stored on linux where we have all information in the
+kernel and operating system is available to introspect by users
+by these virtual files in the proc file system uh
+there are a lot of tools that are used for reading stuff out of procnet i would
+probably not read it directly unless you really want to tools like
+netstat or ss provide much cleaner and nicer
+interfaces and more sensible interfaces to these things but anyways
+uh if you wanted to look at them directly things like protnet dev
+contain raw information on network devices this is where ip route iplink ip
+adder etc get their information from they contain these information on the
+network devices and statistics like the number of bytes that have received and
+transmitted over the over that interface um
+in procnet tcp or udp we have information and statistics on the open
+system sockets this is where tools like ss and netstat get their
+information about what's what communication is actually happening on
+your system from
+this information is not super relevant i mean it is very relevant but okay
+so in proxies process net we have a file interface to the internal network
+configuration for example on linux if you wanted to
+allow your system to forward traffic … so if it received
+uh traffic for an ip that it does not recognize but it is in its routing table
+the linux kernel could just forward those packets out another port so that
+it's sent back sent to the destination for those
+packets but you have to enable this by doing
+like echo one into proxies and that ipv4 ip forward
+there's a ton of different um uh flags that control like you could
+disable ipv6 entirely you can disable various many like deep parts of you can
+deeply configure and tune aspects of the congestion control system
+uh the tcp receive and send windows um … various things like that
+um … and the subdirectories in which this uh these things can be found very from
+system to system but uh all of it can be found in the
+documentation and you can use if you if you do modify any of these things and
+you want to preserve those changes across boots you can write them to
+etsyscuddle.com to preserve those changes
+so for example if you wanted to disable ipv6 which some people
+still do you could write net ipv6 conf all disable ipv6
+equals one to see cisco dot confident the next time you reboot your machine
+you'll find that ipv6 continues to not work
+let's talk about some common tools that you'll use in debugging networks we
+talked about host earlier to get dns information host name will also just
+tell you the name of the computer that you happen to
+currently be on uh tools like ping traceroute
+allow you to use icmp to give you information about
+uh the connections themselves like latency that are happening in the
+network uh the direction that packets are taking
+through the network things like arp or ip will allow you to view the
+address table and see like local debugging information for your local lan
+network tools like dig and drill give you dns
+information uh ip is the base command of ipv2
+which is the manage networking subsystems management uh
+package on linux netstat allows you to inspect active sockets so you can see
+uh what services are bound to what ports on your system
+uh what flags they have enabled what traffic is going to them
+nc is netcat which is a very simple tcp and udp client server so you can like
+raw like send raw data over tcp udp clients
+over a tcp udp connection to a server and vice versa
+curl and wget are versatile layer seven network interaction tools so you could
+curl a website or with a website and it'll
+speak http to a server or speak various many protocols that
+curl into get support um iptables is the built-in stateful
+firefall and packet inspection system in the linux kernel it's a
+pretty comprehensive and honestly complicated difficult to use
+but uh comprehensive system for tracking blocking
+doing nat forwarding packets all kinds of things that you can do in linux
+kernel using the ipv tables um subsystem … if you want to do firewalls in
+particular ufw or universal firewall as a
+ufw is a easier to use wrapper around iptables that i would
+highly recommend rather than trying to write iptables rules directly
+tcp dump is another very useful command that
+will as the name suggests literally dump all packets on an interface
+um the instructions for how to use many of these things can be found they're
+fairly simple it can also be found in the documentation or by looking up
+examples online let's take a look we'll briefly cover a couple of these
+um let's take a look at ping what ping does
+is it sends an icmp message to a server and awaits a response and
+then gives you some statistics about how long it took
+for example right now we say ping c5 google.com
+we expect we will we're going to send five packets to
+whatever google.com resolves to and give us some information about
+the … the network conditions as we got them back
+so you can see here that in the five packs that we sent to google the average
+um … round trip latency was … 3.0 milliseconds
+and you can see that the time for each individual packet is listed in the
+output um … for from
+our web server to google.com takes three milliseconds
+whereas if we connect to from our web server to
+like a web server that is located in iceland it takes 144 milliseconds which
+makes sense because of how much further the distance between
+google's edge server which is likely in the data center very close to berkeley
+one of google's edge servers compared to a server in iceland which has to
+uh cross many thousands of physical miles to actually get there
+even at the speed of light uh but across mult like tons of networking equipment
+so what you can see here is uh latency information
+if an icmp packet fails you know that there might be a problem in the network
+there might be congestion in the network there might actually not be any
+connection at all if there's high latency where you don't
+expect it that could speak that could tell you give you
+information about latency in the network um problems in intervening
+routers um and if there is a high latency where you expected then
+you or higher latency than you expect then you
+know that there's some problems in the network
+traceroute is another very useful command that uses icmp as well
+what traceroute does is it prints the route that a packet takes from the
+source to destination so from our server if we trace your
+google.com you can see that it takes nine steps or nine hops for it
+to reach google's front-end server each hop
+is a router you can see that the first five
+hops the first four hops in this case um are within the berkeley network we
+started vlan 635 which is the upstream router from
+the ocf um up until it hits at entry tree number five oak dash
+ag4-ucb10gcnic.net scenic is the uh california
+education network that berkeley can actually get internet access
+from there it jumps directly into the google network
+google peers directly with scenic which appears with berkeley so that is how we
+are able to get our traffic from our network to google's network
+so … if you were to run tracer out from example two
+servers that are on the same local network the hop count would be
+zero because there's no routers in between there's only a switch and that
+doesn't count as a hop but if you were able if you did a so for
+example if you did traceroute from this server called death
+or web server to supernova or admin server uh there'd be zero hops however
+if you did a traceroute from our uh
+death.org edu to say berkeley.edu there would be many more hops
+because berkeley.edu does not necessarily live on the same network as
+death.ocf.edu mtr is another is like a live trace
+route is very useful for testing it tracer will only run once before
+terminating mtr will continually try and update so that you can see
+changes in your network uh as they're occurring live
+um this can be very useful for seeing if um latency exists in
+one particular node in your network for example here we see that
+um the host that is above xc020 dot inr002 network cv to berkeley edu
+has is facing a 30 packet loss rate
+tools like this can help you investigate where problems in your network
+uh are if they're not in your most if they're not at your at your host
+and they're not at your destination if there's some problem in between
+ip root 2 offers a lot of functionality the ip command is … has a
+ton of things that are beyond even the scope of this class to talk about
+um you'll most likely be using it to display
+uh for debugging purposes like links link layer
+uh interfaces ip addresses routing tables and things like that
+or to modify them if necessary the documentation for this is
+comprehensive i would recommend reading it if you are so interested
+um … you can use you can do a lot of things
+and a lot of all the stuff that happens in ipa also happens live so there have
+been cases in which while trying to edit a
+network configuration over an ssh connection where
+we … have established an ssh connection over an old
+uh ip address and you want to switch the ip address for a machine
+where by deleting an address before adding the next one
+we kill our ssh session and are then unable to add the second
+ip address … so it stands to understand the way in which
+these things work so that you don't accidentally lock yourself out of
+machines on your student vms you may want to try
+some of these demo uh commands ss-tu lpn
+means socket statistics dash tcp packets udb packets
+uh tcp sockets udp sockets ones that are listening
+and then to list their process names and their pids
+um tcp dump on the eno one interface you might need to replace en01 with the
+actual network interface that you could get by
+typing iplink on your student vm um you can dump all the tcp traffic that's
+happening over that interface um and if you drew netcat you might need
+to install the netcat command um … but by typing in nc
+and then the address or something and then the port you can communicate
+directly with those services um there might be a telnet
+server open somewhere or you could try uh going to wttr.in
+i think that's up and you can try sending a you try
+hand crafting a telnet or http … um
+protocol … command to one of those servers another interesting thing that might be
+fun to try if you can figure out how to write
+a smtp message you could use netcat to communicate
+directly with our mail server and try and send yourself a piece of mail
+by manually composing an smtp request i won't go too much into iptables
+because it is quite a beast but the documentation for how to use iv
+tables is comprehensive [Music]
+and you can read about this on the digitalocean community tutorials or
+literally by typing in how to do any iptable stuff if you can avoid using
+iptable directly i would recommend it and try and use ufw for your day-to-day
+firewall like coast level firewall purposes
+but iptables has a lot of use for more advanced networking things like
+setting up nat on an internal network uh shuffling traffic from one … interface to
+another or if you're using virtual bridges ib tables can have some
+invaluable tools for uh allowing you to do fine-grained
+network access and network control
+so yeah i hope you enjoyed this lecture it was
+quite dense although this time managed to end before the hour
+if you have any questions please ask your tas or
+ask in the relevant channels and i hope you learned a lot thanks

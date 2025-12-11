@@ -1,0 +1,338 @@
+Linux SysAdmin Decal b10: Cloud, Containers, and Config Management
+Subtitle
+hi hello so welcome to lecture b 10. uh today's topic is cloud containers
+and convict management my name is richard huang and i got a
+slightly better mic so hopefully that helps
+uh today's topics are virtual machines containers and configuration
+and so the main ideas for today are basically
+how do i make sure everything is configured properly and stays that way
+you know how can i make sure that system performs
+reliably with minimal downtime and when everything breaks how do i fix
+how do i fix it and so the first topic today to help answer those questions are
+virtual machines … uh for those who don't know virtual machines you can kind of
+think about as like a computer inside of your
+computer and so it's basically like this
+abstraction layer that basically helps abstract away the physical hardware
+through software emulation and this layer usually called the
+hypervisor and you can run multiple vms on top of this single hypervisor
+uh the advantage of this is that you know for example if you have application
+a and application b one might need python two for some weird
+reason and one might need python three you may have uh library conflicts like
+that and so being able to separate these applications into their own vms
+helps with stability because there is no uh connected library between them and so
+therefore there's no library conflicts and because of that there's also better
+security because of the isolation however there is some overhead because
+of the fact that you need a different os and for each vm and there's also the
+overhead of the emulation for the virtual hardware for
+each application and the other thing is it does take some
+time to boot up it is slightly better than like a normal computer but it still
+does take a decent amount of time to boot up
+um but yeah so this is basically like a diagram of it
+where's my pointer there's my pointer i can think of it as like this is your
+hardware you know like your cpu your memory and stuff and then the hypervisor
+just sits on top of that and abstracts all of it away from the
+applications and the vms and ins and each of these tiny um each of these
+tiny boxes inside the blue square is a vm and you
+can see here each vm has its own emulation of virtual hardware and then
+on top you have guest os and then on top you have the actual running application
+so you kind of see uh it's isolated right
+within each individual box however you do have this
+extra overhead within each vm in order to run a different application
+uh that's the vm and so just as an aside there's actually multiple ways to do
+abstractions like this so for example at the hardware
+level you have smt hyper threading and multi-core
+computing 7d which you probably will learn in 61c
+or have learned there's also process level abstraction such as virtual memory
+and multi-threading on the application level you have sandboxed applications
+and in the operating system you have you know name spaces kernel level isolation
+bsd jls solaris zones linux containers and for full
+virtualizations for full virtualization you have kvm
+vmware zen hyper-v and this typically does
+uh hardware virtualization with type 1 and type 2 hypervisors
+and yeah so that's just a quick brief uh intro to virtual machines
+so we'll be moving on to containers and so containers you can also kind of
+think of them as like a lightweight vm but
+technically not a vm but you can kind of think of it
+similarly uh we won't get too deep into how exactly they work
+but their goal is basically to provide like lightweight isolation by sharing
+some code like libraries and hardware with the host
+so it's a lot faster to do like way faster like seconds
+or even less sometimes and you can basically
+uh it basically helps make it easy to package applications for
+consistent deployments and some of the most common ones that you may have heard
+of are docker uh rocket or rkt i think that's
+how it said uh c or linux containers
+but yeah i don't know if this is true but i think this is the only class at uc
+berkeley that uses docker still but it would be nice to see more
+classes music that is pretty pretty cool yeah so since docker is the
+most popular one that you've probably all heard of
+uh we're gonna mostly talk about that so docker is basically this container
+platform that is backed by os level virtualization
+and what a container is is basically a running instance of an image that's been
+loaded into the memory and an image itself is basically just a
+file that provides a template for spawning new containers it's kind of
+like uh you can kind of think of an image
+kind of like as a cookie like cookie cutter
+and then this basically helps you create cookies which are the containers it's a
+bad analogy but you kind of get the idea um but yeah so how do we create these oh
+first let's go through actually you know what let's go to this
+first so how do we create these images so you create these images
+uh using something called docker files which you may or may not have heard or
+seen so you can see here basically uh we're
+basically using the ubuntu image as our base image
+and then we do some system updates and install some
+packages so in this case you know we're updating we're installing python 3
+and we're also installing pip and then we also update pip
+and then we install flask which is just a web server you don't have to worry
+about what exactly it does or is but it's just a web server
+and so we can also add local files to our server or to run the
+server to our container by doing something like
+add hello dot pi into slash app slash pi and then we can
+set the working directory to slash app and then all we have to do now is just
+inform docker that we're going to use port 5000 and then
+set the entry point for flask to the hello.pi
+and then just do flask run host localhost
+and that's it yeah and let's go back quickly some quick docker essentials for
+when you're using docker and if you want to pause this it might be a
+little easier to read it and you can always just you know man docker if you
+want uh more explanation of what they do but
+yeah we have docker search basically searches the docker hub
+for just pre-built images you know like ubuntu one we looked earlier that's
+basically like a pre-built image you can also do docker pull to pull the
+images dock your images build run ps um yeah i'll let you look at it
+on your own time but i can do a quick demo as well of for
+example this so let me just
+pull up
+the cal yeah that's the right one two three five six … over here we can see
+we have a docker file and hello that pie so let me just show hello without pie
+quickly just so everyone knows what it is
+uh so all we're doing here you don't really have to know what exactly this
+does but it's basically just a flask uh web server that just returns
+hello.world when you go visit it yeah that's it nice and simple and so
+what's the docker file so i basically just copy paste
+this over and so the holodop pi that we referenced which you
+probably were wondering about in the slides is basically just this hello.
+and yeah so how do we use this so we can actually build
+the image so by saying docker build right and so we're saying like build
+within this directory so just search for the docker file in this directory and we
+want to tag it with a name and so in this case linux decal b10
+and yeah so this is really fast because i already built it before
+but you can see through the steps here right it grabs the ubuntu
+base image runs the updates installs python pip
+flask adds are hello.pi and then we just expose the port
+5000 and then tell flask to run this and yeah
+now we basically have an image to actually see the images we can just do
+docker images and you can see over here that there you go
+there we go you can see over here that we have the
+linux decal dash v10 image that we just built
+or i built earlier um but yeah so that's that's that
+and how do and how do we run the actual docker image so
+all we have to do is just call docker
+run and i'll explain this quickly so the dash page stands to report so all i'm
+doing is saying i want to connect my local
+host port 8080 to the container port 5000 where
+our web server is running and the dash rm this is just because
+doctor keeps in docker keeps containers that
+are stopped and i don't want to keep this one around because
+i don't need it um yeah and then we just specify the image
+linux uh decal b10 and we just click run and yeah it's working so it's running a
+flash server over here and if we just open
+chrome all right we go to localhost 8080.
+you'd see hello world right like it's working and you just like fresh a bunch
+of times you can see that getting requests over here um yeah
+that's basically how you build a docker image you run the docker image as a
+container and … yeah cool stuff
+uh so yeah that's docker … and so uh a lot in the industry lots of people
+are using like a bunch of containers and they have just like
+thousands or possibly millions of containers to manage so how do we manage
+all of it that's where uh container orchestration comes in
+and so basically container orchestrators uh help us make sure that we have
+a the right amount of containers we want b the containers on the proper machines
+and c we handle failures by restarting when
+they die i'm not going to get too much into it but through distributed systems
+magic we recover from failures by having
+multiple masters distributed key value stores like xcd
+and stuff like that um yeah so these are some of them are popular ones that
+you've probably heard of kubernetes mesos marathon docker swarm kelda
+if i do remember correctly i think ocf runs on kubernetes and we actually
+recently were using uh mesos in marathon before we moved to
+kubernetes but yeah that's that so with all these
+tools how exactly has the uh modern
+infrastructure evolve so you can kind of see here this
+is like before vms and before containers we basically had this thing
+called a non-converged infrastructure so apps basically ran on
+bare metal over here so like we have this storage network
+we have servers and then we have these apps running on these servers
+uh and the issue here is there's no isolation because these apps run just
+side by side on the servers and so there could be you know
+conflicts library conflicts and stuff like that and there's also
+no easy differential resource provisioning and moving apps
+is definitely a nightmare if you've ever tried to move uh bare metal apps
+it's it's not fun let's just leave it at that yeah
+and compute management is also uh questionable to calculate
+yeah so moving on we introduced vms and so this is where we have conversion
+infrastructure so these apps basically instead of running on bare metal we now
+have this layer of obstruction uh which is the vm
+and so these apps run on these vms which are provisioned by these
+hypervisors and so there this provides uh isolation and also provides
+differential resource management differential resource provisioning
+management same thing um but yeah so however moving apps is
+still a nightmare uh because of how virtual machines works
+and compute management is also just still
+a little questionable and this is where we have something called
+hyper-converged infrastructures and so these are basically where apps run on
+vms or contain or apps run on vms or
+containers provisioned by the hypervisor
+technically and these provide a lot better isolation
+and there's there's still differential resource provisioning but now there's
+also the fact that software basically manages
+all of it you can see here that we now have this distributed controller
+that basically helps control these vms and these
+stuff like that um yeah so basically software can now help move apps software
+manages compute and scaling is basically trivial kind of like with you know
+kubernetes we can just say if we want more via or we want more containers we
+just say hey give me more containers and it just spun
+up and so this is the current infrastructure that we have
+basically is that software manages everything we have these layers of
+abstraction to help with that … uh yeah that's containers so moving on we have
+configuration right so with this huge scale we have
+new problems and these problems usually can are composed of like if we
+have a million or a billion machines like you
+can imagine at google how many machines they have it's probably crazy
+but how exactly do we provision them uh you know so they have everything
+installed once they boot like how do we organize these machines to do
+the work that we wanted to do like even vms on like popular cloud providers like
+aws for gcp i i don't think they take five to ten minutes now it's probably a
+little faster but it still takes you know minutes to
+actually provision and boot up um yeah so how do we like recover from
+failures automatically from these things and what happens when we can't recover
+from failures automatically like these are the big questions that we have now
+with this huge amount of scale and to help with this this is where
+automated configuration management tools comes in oh my god that was a mouthful
+um but yeah these are declarative uh declarative
+programs so you basically tell it what you want not exactly
+how you do it but you just say like i want this and then at the application
+figures out the how for you it's really nice and so you can
+basically define applications to install files and include users to create and
+stuff like that and you can also install different things
+uh on different classes of machines you know like a desktop versus a server
+versus a mail server or possibly even a printer
+printer server and it's the most common ones that you may or may not have heard
+of are puppet ansible and chef uh i believe the
+ocf uses puppet though i don't personally have that much
+experience with it i do use ansible myself and i actually have
+an example of it uh if you guys want to check out actually let me see
+if i have it
+yeah um yeah i can go through quickly just that is an example
+of what you can do so basically i have like this
+home labbing is like my hobby i do some uh
+self-hosting and stuff like that so it's kind of a pain if i want to set up
+all these applications that you see here manually so i basically use ansible to
+automate all that for me so over here i just have this
+uh it's called a playbook or whatever uh yeah i just have all these apps and i
+can basically just tell it uh what apps to install on my server
+or on the news server or whatnot and it basically goes and does it
+and for a quick example i can like pull up plex which is a media server
+um you can see here meta it just tells it
+what dependencies to install for example docker firewalls what ports to open
+and then for tasks it basically you know pulls in the ah
+this is from earlier containers right pulls in the plex container
+and it just tells it some stuff like what image it is the name of it restart
+policy network mode where to store data time
+zone stuff like that and also to uh put the domain
+at where it runs and yeah i just have a bunch of services like these and you can
+actually my entire like setup is like this so if
+i go to like plex dot my website … um this
+is my plex server which i host a bunch of media on
+and stuff like that but yeah there's a bunch of this for example i can go to
+like monitor dot my website again and you can see
+this is grafana now which is this this boy over here
+yeah and this basically just like has some basic monitoring
+information about my server um but yeah so this is why
+um configurations like ansible is really nice because you can just automatically
+configure it and you don't have to manually do it
+over and over again which gets really annoying but yeah that's a
+brief personal example of how automated
+configuration management tools work and so since the ocf mainly uses puppet
+i'll go over that more in depth so basically how puppet
+works you can kind of see this is like the puppet platform you have this single
+a puppet master like we said earlier we have these nodes down here uh they're
+running puppet agents and these this pup match puppet master
+communicates with these puppet agents and to basically configure them and you
+also have these modules up here which basically … uh you know like a
+public puppet dashboard and you also have like
+third-party systems to interact with puppet
+um but yeah so how does puppet work puppet like i said earlier it's an agent
+master paradigm you can see here agent master right
+so puppet agents run on basically every machine that you want to be configured
+and the master runs on only one machine and so this master contains all the
+puppet code that we want to write and this code is split up into multiple
+classes or roles or however you want to call it which
+basically defines different machine config for example
+you could have like a mail server like i said uh and
+yeah master can even contain code that actually defines the
+puppet master config you know configuring itself
+and yeah so this is basically the life cycle of a puppet run so
+to apply configurations the master basically
+gets the information of the node called facts
+from a utility called vector this is step number one over here
+all right and then the master basically uses these flags
+and class types to compile uh manifests into a catalog which contains basically
+resources and resource dependencies and it'll basically apply this catalog back
+to the node over here right that's step two and then
+once this catalog is applied it will just generate a report that it sends
+back to puppet which basically just … indicates the configuration is
+complete and you can also uh report from the
+puppet master for like third party tools and whatnot
+if you want um yeah and yeah so how exactly does like the
+communication work so puppet uses like ssl certs for secure
+communication and you've definitely used this before
+if you've ever used https and if you aren't using https you
+probably should be yeah it's based off of public key
+cryptography commonly seen in web applications
+and to use this puppet runs its own certificate authority or
+ca so on the first run the agent basically
+has its search sign and this is because that we want to prevent
+dos attacks because we only want to ensure that legitimate hosts
+have signed certificates so that you know communication
+is nice and smooth and so some important definitions
+for puppet are basically resources right defines a
+resource that we want on the system such as users files or servers or packages
+and manifests are basically files with the pp
+extension comprised of related puppet resources
+that achieve a certain task on the target system
+and so classes are defined in the manifest and they basically tell puppet
+how to execute code in that class so for like normal classes declaration
+you can see we just say include some understood class
+for resource declarations we basically say you know allow overrides or
+class and then class name and then for modules they're basically just a
+collection of manifests and data such as you know facts files
+templates what not and they have like a directory structure and so for example
+there's the mail server module
+and so this is basically a simple puppet resource example of declaring
+your user and so over here we can see we're
+declaring a user with the name harry right i want to ensure that harry's
+present because it'd be nice if harry existed
+and we want to give harry a user id of 1000 so we just say use right uuid
+1000 and then we want to give him the shell you want to give harry the default
+shell of zsh and then we also tell harry's home
+location is slash home slash harry so now he's
+not homeless so now here's the question how do we
+give harry a group id of 2000 now
+right it's not too hard think about it for a sec
+yeah so we basically just say gid points to 2000
+and you can also see other examples here um
+i'll let you look at that on your own time but yeah
+so what happens when puppet fails so when puppet fails it's not exactly
+uh the most graceful but at least it's sane so basically just generates a huge
+report that shows you where the error happened
+and then the user just goes about debugging it and finding out how to fix
+it and there's lots of reasons that public
+can fail you know it's not perfect you know
+there's improper syntax dependency failures resource failure such as you
+know out of disks or memory space or when the puppet master
+isn't running um but yeah but uh these automation
+tools do really help with configuration and provisioning of like tons of
+machines so you don't have to do it manually
+um but yeah that's it for lecture b10 thanks for watching and have a good rest
+of your day

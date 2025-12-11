@@ -1,0 +1,406 @@
+Linux SysAdmin DeCal b8: Security
+Subtitle
+um … this is lecture b8 and we're going to be talking about
+security fundamentals so um a lot of this is going to be
+kind of an overview of uh cs 161 so hopefully you haven't taken that
+course already um because we're gonna be going over a lot
+of stuff that they mention um and then so that's kind of gonna be
+the first half of the lecture and then the second half of the lecture
+um i'm gonna talk about unix file permissions and how that
+kind of implements some of the principles that we see
+um and then after the lecture portion um i'm going to briefly go over the lab
+and then uh if you want to stick around you can
+spend some time working on that uh and i'll i'll be around for a bit or
+feel free to just take off at that point okay
+so um first uh some basic security principles
+so um one of the most important things when
+reasoning about security is that security is economics so
+um you don't want to spend like if you're trying to protect
+something that's worth 50 you don't want to buy a 100 lock for it
+that just doesn't make any sense um you want to um
+also … know where you're focusing your your resources and and focus them on the
+weakest link because an attacker is going to
+um like almost all the attacks are motivated by
+economics so if you can make it um economically like unviable for someone
+to attack and make it not worth their while then
+you can prevent so many attacks so um
+that's that's one important thing uh something else
+least privilege so you never want to give someone more privilege than
+they need um so an example of this in practice is like
+a sandboxing of applications like on your phone
+uh if you're in one application or you're a developer writing code for
+an app you have no control over uh other apps
+on that phone and so um everything is sandboxed and
+that's not giving privileges that don't need to be given
+next we have defense in depth um and that's about redundancies and
+multiple layers of security so if one thing fails you want
+to have a backup … and you want to have
+multiple lines of defense complete mediation means
+you need to be checking every single way an attacker could get to whatever
+you're trying to protect so it's not enough
+to um just check for check one path uh you have to ensure
+that you control uh all the ways to get to whatever
+you're trying to protect so for example um if you're trying to uh protect a
+house uh and you might lock your doors well
+that doesn't matter if uh you know you leave your
+your window open and someone can get through there or or
+a screen door or something so uh you have to know
+all the ways that an attacker can get to what you're trying to protect
+and um you have to ensure that you're checking every single
+every single one of those ways finally you have to account for human factors so
+one thing that's quite common is that … people will be presented with
+multiple options for how to do something maybe multiple options for what security
+they want to use and uh if you give people the option
+to pick something bad some people will do it
+so uh a good security um model is when you don't give people the
+choice to mess things up um because it will
+happen if you do give people that choice um and
+also another thing with human factors is you want to be uh still
+resilient uh even if like a human could could cause an error so for
+example uh like there's social hacking
+um trying to convince like um earlier uh a while back
+uh twitter was compromised and and many accounts were
+taken over and that was because of social engineering
+uh and and hackers got credentials um from employees uh
+also you have to account for human factors
+uh with things like phishing uh sending fraudulent emails to try to get
+information um a lot of emails that are real
+uh look like uh they might be phishing emails
+so that's actually like training you to think that
+um they're okay and then um and then you have this problem where
+uh … humans can like personal error can mess things up
+so you want to avoid that and not let that happen um lastly
+uh know your threat model so know uh what you're trying to protect what's
+at risk and what you can do about it and and know uh
+who might be trying to get get what you have or what you're trying to protect
+any questions so far … or comments
+okay
+so uh so those are some general security principles
+and then we also have um a number of security goals so
+um … these four confidentiality integrity authentication and
+availability so goal number one we want to make sure
+that … things are confidential if you don't have access you shouldn't
+be able to access it um integrity uh
+yeah that means ensuring that data has not been tampered with
+so um verifying you should be able to verify
+that like for example if you have some database and you're
+getting some value from it you should be able to verify that
+an attacker hasn't tampered with that data
+authentication you need to be able to prove the author or the source of the
+data so one example of this is if you have some
+file or some like uh disk image of something and
+you're downloading something you want to know that it came from
+like the correct source um and then availability uh you want to ensure the
+uptime is of a service so um you want to prevent it from
+attacks like denial of service um things like that
+so starting off with confidentiality um so a few terms
+plain text is
+things that it's like human readable data
+um unencrypted and that's what you want to hide so
+maybe say i log into my facebook account or i create a facebook
+account and then i send facebook like the plain text
+would be my username and password um and they
+don't want that just sitting on their server because if someone comes along
+and looks at it then they'll be able to get that
+so we don't want to store plain text ciphertext is encrypted data um
+and you shouldn't be able to understand what it is
+unless you're uh you have access to it there's a key for it um
+and so that's what um you might
+pass over an unencrypted channel with ciphertext
+and then the key is the thing that's used to
+convert from plain text into ciphertext and back
+so … you might need a key let's say i want to send data i use a
+key to encrypt it into ciphertext locally and then i send the cipher text
+over to whoever i want to get it and and once they have the ciphertext
+they can decrypt it with the key and anyone who sees the data in between
+like if they're monitoring the network they
+they can't see anything because well they they do they just see the
+ciphertext and that means nothing to them
+um so say i want to send the message this is a secret well i
+pass it through an encryption function which as an
+argument takes a key that i have and then it spits out this garbled
+message which has no meaning if you don't have
+the key and then you take the same message
+pass it through a function which takes that same key as an argument
+and then it spits out uh the plain text question so far
+okay
+um so uh what i've just explained is symmetric
+cryptography so that means both people have
+the same key and the same key is used for encryption as
+decryption that's why it's symmetric it's used both to encrypt it
+and decrypt … and so if i want to share data with someone else we need to both
+agree on a secret key ahead of time uh in order to do this
+so the other option is well what if i haven't met that person like in real
+life and i care somehow and i can't exchange some
+symmetric key with them well uh you can do asymmetric
+cryptography which is also known as public key cryptography
+and so everyone has a a public key and a private key
+and the the private key it must be kept secret
+uh you never share with anyone else ever your public key
+uh should be broadcast to everyone um so like if you have a website
+you can put your public key on your on your website
+and then uh anyone uh when they want to send a message to
+you they ask or they find out your public key they
+use your public key to encrypt it and then
+because they've used your public key to encrypt it
+the only thing that can decrypt it is the corresponding private key
+so nobody else can decrypt it except for you
+because you have the corresponding private key to that public key so these
+keys are generated in pairs
+so … right so this is asymmetric cryptography because these are two
+different keys it's not the same one for encryption and decryption
+so the public key everyone has so anyone who wants to send a message can
+uh encrypt it and nobody but you can see it
+because you have the private key which is needed for decryption
+questions
+okay so next is integrity so it's all fine and great if our
+message is confidential but say we have a man in the middle attacker so let's
+say i'm trying alice is trying to send data to bob um
+and there's someone uh who controls the network so alice sends over a message
+and then um someone controlling the network
+can switch out the data and bob will think
+hey i received you know whatever i received
+and and bob will think alice sent it even though it wasn't sent by alice
+so even though some eavesdropper can't uh find out what's the contents what the
+contents are um there's still an issue with integrity
+so uh one thing useful for integrity is hash functions uh and so
+what an example of a hash function is like uh
+md5 or shaw hash function maps arbitrary length data
+to a fixed length string known as a hash so however big the data is um
+you can run it through this function and it'll produce
+a fixed length output so you can hash files that are many gigabytes um
+it doesn't matter how long the input is um
+and the idea is that if anything in the input changes even by one bit
+then the output is completely different and
+totally unrelated and and random … even if there's only a
+small change so … um
+cryptographic hash functions uh make it difficult
+to find two inputs that uh yield the same hash when you put it
+through this function um and we'll get and we'll get to it in
+a second why that's important so uh one way to authenticate data
+is with or sorry not authenticate um one way to ensure integrity of data
+is with a mac or a message authentication code
+and so what you do when you want to send data
+and ensure that it's not tampered with is you send the message you want to send
+you send a tuple or a pair you send the message you want to send
+along with a mac value the message authentication code
+of that data and so then when
+the receiver receives this data say bob receives this data
+what they do is they compute this hash they compute the message
+authentication code for the data that they received and they
+see hey does this match up with the mac that i received
+if it does great if it doesn't that means
+the data was tampered with and so um what's going on is we'll say
+an attacker knows how to compute
+message authentication codes well then what they can do is switch out the data
+and then they can also switch out the message authentication code to
+be the hash of the data and so what prevents this is that um
+attackers can't compute this and they and they can't find another input with
+the same hash so let's say um
+alice sends the word hello to bob uh well if uh another word
+say world uh had the same mac value then
+some attacker could just switch out hello for world
+and then bob would be none the wiser he would be like okay
+the mac checks out so that's why it has to be difficult to find two inputs with
+the same hash and then one other thing where hashes
+are used uh checksums so let's say i download a file
+then you can … compute the hash which is really really fast um and then
+you can check it against a reference hash which might be
+like posted on the official website um and then uh if these hashes are equal
+which is easy to check then you know you've got the authentic
+data … questions about hashing or max or any of this
+or if you want me to just explain something again or go over something
+again feel free to ask about that too
+okay … um oh and one last thing about hashing it's
+difficult to give in the hash value or the function
+output it's it's hard to find what input
+generated that um so with password storage um
+right in that example of creating a facebook account
+uh you want to store the hashes of passwords
+um so if someone compromised facebook servers
+then instead of being able to read all these passwords
+plainly they're only seeing the hashed values
+and uh the idea is you can't get back to the
+original value with the hash value and then every time you log into facebook
+what it does is it takes your password hashes it and then says do these hashes
+match and if they do then it must be the same
+password okay so um authentication
+we're proving uh about the source the data who's the author
+um so um the way this is done is with what's
+called signatures or um … uh digital certificates
+um so a signature is uh when a private key is used
+to … digitally sign a file and anyone who knows that corresponding
+public key can verify that this signature is valid
+so … if you get some if you you get past some signature
+um then uh and so signatures are on a message so
+you might send a message and then send a signature
+along with that message uh and so you can check
+uh and verify uh that hey this signature is valid
+um and and this is authentic so uh in this scenario um
+alice uh signs the message hello bob um and then what bob does
+is and alice signs it with her private key and then what bob does
+is takes the public key and runs it through a verify function
+and then bob can tell hey alice really did say this
+there's no one else who can generate a signature
+uh because if you generate a signature then that means
+you must have the private key
+okay and then lastly um availability um and so this mostly
+relates to things hosted on servers so
+filtering you want to prevent malicious requests from reaching a server
+so right servers have limits they can't handle
+infinite requests and so if some malicious person
+sends you know tons of requests then that's going to block up the server and
+prevent real requests from getting through
+so you might um like visit a website and then it's like
+cloudflare says uh you know wait five seconds it's doing
+like ddos protection and so that's distributed denial of
+service and so what it's checking for is that
+um you're not a malicious user um and and uh
+they should let your request go through um
+so another way uh to work on availability is having load balancers
+so let's say you have uh a certain number of resources
+that can handle requests well you want and you get
+uh that then you want to distribute uh the workload across
+uh all the resources you have so it's just a way of
+uh determining of basically ensuring that
+uh all your resources to handle things are being utilized
+you want to have redundancies so when one thing fails that shouldn't break
+everything and then you want to have backups for
+when things do fail you want nothing to be lost
+questions [Music]
+where do hash functions come from uh yeah uh
+uh people come up with these functions and there are
+uh just pretty popular and standard ones uh there's all sorts but there's certain
+standards that are used um and they're just devised by
+mathematicians and proved to uh … show to have certain behavior
+um yeah i don't really know the internals of how they work
+any other questions okay … so
+um … now let's talk a bit about permissions and ownership
+so here we're going to be specifically talking about
+unix … file security and um how
+they'll show some of the principles that we talked about earlier
+so … um unix is a multi-user environment so
+you can have multiple users on a host if you've ever logged into like berkeley
+hive machines right you log in with your
+instructional account … and there's multiple
+users accessing the same machine … if
+multiple people can log in but you have files that you want to keep private
+uh you need permissions and ownership so um right say you want multiple people or
+it could be just a like home desktop and you have you know
+multiple people using it then multiple users you you want that to
+be separate you don't want one user to be able to see
+or change files on another user
+so … in in unix we have uh three ownerships per file
+so we have the user um uh the owning user so that's whoever runs it the
+owning group which can be a group of users and then
+everyone else and for each of these uh ownerships
+uh there are three separate permissions so read
+being able to read a file being able to write a file
+and then being able to execute a file so here you can see
+uh so this command that was entered was ls-la
+so ls is list to list the files and then the
+l flag says uh give me more information uh such as not just the file name but
+the permissions and then the a flag means show all of
+them so like even hidden files the ones that start
+with the dot show those so here like you see this
+d r w x r dash x r dash x um so what that's telling you
+is the permissions so here the the d is the first part it
+tells you whether the file is a directory
+so for uh these blue ones uh or the directories
+uh you can see that they start with the d and then you see
+three sets so there's the first set of read write execute the second set of
+read write execute and the third set so a letter indicates that that
+permission is present so whenever you see like an r that means
+okay the read permission is there and then a
+dash means that permission is not there so for this uh this
+means it's a directory uh the user can the owning user can read can write
+and execute the file the group can read and execute but they
+can't write and then everyone else can just read no
+other permissions
+so you might want to modify permissions um so there's two main ways to do that
+uh ch own and chmod … um so
+when you want to change file ownership use
+ch own um and so the way you do that is type out the command and then the new
+user you want and the new group you want and then the
+files that you want to change so here we see sudo ch own so we want to
+set the new user to be admin and the new group to be
+admin and then the file we want to change is
+important document and so if we look up first we try to cat important document
+we try to see what's inside it and then it says permission denied
+and then we change ownership and then we ask what's inside and it tells us some
+important text and so … well how do we make sure
+like like why why why is this person allowed to change
+uh the permissions and so that's because they
+invoked pseudo um so they acted as root here and
+basically uh root did have permission to change ownership and so by invoking
+sudo they were able to … run this command
+and so if we look uh before for this file important document uh it
+was read write uh and then
+um … oh sorry so so that we didn't change any
+permissions we just changed ownership so initially root
+had permission and then we acted as root uh when we used sudo and we said
+change ownership to be admin and so now it says admin is the owner
+when we want to change file permissions we use chmod
+so here at first we see that … um the
+there are no permissions for everyone else it's just three dashes at the end
+and then after doing chmod uh plus r then
+uh we say uh we we now see that uh that r indicates that um
+we want to add an r here and then now it can be red
+um and so uh even if you don't have the permission and you don't use
+sudo you can still … see it
+so why is this important um you don't want to give an attacker too
+much privilege um so uh
+when if you're like if an attacker is is uh you know interacting with a file uh
+say or interacting with a program and that program
+has uh all of these permissions um then they can manipulate things
+um to uh to do what they want and it and this also goes back to least
+privilege we want to run things uh with the least amount of privileges
+um and if you set these permissions on your private key
+that means anyone can view it and then all of your communications are
+compromised questions … i have two
+questions … what does execute like imply and then my other question is
+can you ever not invoke suit like can you always use sudo to change file
+permissions um yeah so uh first question about
+execute um so certain files
+are … so you might not wanna on so let's say you're writing a file
+that ends in dot c so it's like a c programming file uh so
+you might want to read the file you might want to write to the file and then
+execute it is like actually run the program um so that's
+like the most powerful permission and then the other thing you
+asked is can you always use sudo um so if you're running on
+your own machine then if you have the privileges of root then
+you can always use sudo it's just uh when you're typing commands normally
+you you don't want that much power actually because it's not going to ask
+you again uh it's just going to do whatever you
+tell it the computer is gonna do whatever you tell it to do
+so you often want to interact with your computer in this reduced permissions
+mode uh where you you don't have enough power
+to screw things up basically and then only if you know what you're
+doing is that's the time when you want to actually
+invoke sudo … does that answer your question
+yeah but like if you have an image file will that have an
+execute like do all files have an execute or no
+um yeah so all files have the read write execute
+permissions um but if you just try to execute it
+um then uh it won't work like weird things will
+happen because it's not an executable file
+so um like … yeah if i
+create a
+if i create a folder [Music]
+okay and then i make a file it doesn't matter what extension i give
+it uh if i view my files
+um you see it still gives all the dashes for for it's like the um
+placeholder for execute it's just nobody's allowed to execute it
+but i could give myself so uh when when you run chmod the arguments
+you can use letter arguments or you can use number
+um i believe read is 1 write is 2 and execute is 4. so
+if i input 7 that means all of the permissions um and i want to
+add all the permissions for the owner and then no permissions
+for everyone else so 700 and then the file … and now if i look at
+it sorry if i look at it i do have execute
+power uh but and it's red showing up as i can
+execute it uh although this won't do anything
+because well the file is empty uh so
+yeah … thank you
+okay so i believe that is uh the end of the lecture uh so i'm
+going to stop the recording

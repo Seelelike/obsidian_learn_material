@@ -1,0 +1,270 @@
+OCF Decal Intro to Networks
+Subtitle
+hello everybody welcome to ocf decal um today's lecture is going to be about
+the introduction to networks i'm tony liam
+so um let's get started … so what we are
+going to talk about today is um first some brief overview of
+computer networks and then i will introduce some system
+admin commands and i will do a demo live during the lab
+and well um so the introduction to networks
+so networks are built for communication right it seems to be easy but it's
+actually really complicated well there are some desirable properties
+that a computer network needs to satisfy for example low latency well you want
+the time to reach another computer to be low you want high
+throughput that is you want to be able to transfer
+a large amount of data really quickly you want it you want the network to be
+fault tolerant um when the subset of a network is down
+then the network should continue to be functional
+and there are even more desirable properties to come
+we'll have a peek into the basic concepts in this lecture
+um the first concept is the mac address well mac stands for media access control
+it is an address that is uniquely assigned to each physical
+device for example your networking card so it's also referred to
+as uh the physical address um it's six bytes well
+six uh so here we write byte in hexadecimal so it's also called
+outlets of the first three oclets refer to the organization
+which creates this physical device for example
+in this example mac address the purple part is the oui
+which identifies the factory uh the manufacturer to be gigabyte
+and then the green part identifies the card
+uh the networking card that you use however a limitation of mac addresses
+that they can only only be used to
+communicate within the same local network
+if you need global communication we need something else
+that is ip address
+um every computer has its own ip address except some special circumstances
+there are basically two types of ipaddress that
+that are commonly used the first type is called
+ipv4 … it has 32 bits so 32 bits basically means four bytes
+so uh it is usually divided into four segments
+it's formatted it's formatted like uh the example address
+one two three point four five point uh six seven point eight nine
+well because the ipv4 address has only 32 bits
+there are only a limited amount of ipv4 addresses
+even fewer than the number of population in the world how do we solve the problem
+well um even uh even if we use up all the ip
+addresses we cannot we cannot assign everybody a unique ip
+there are two solutions the first solution is the net
+network address translation which allows several computers to use the same public
+ip address how do we do that well if
+i use my iphone and my mac in a same wi-fi it's really likely that my
+iphone and my mac will share the same ip
+address i mean the same public type address but
+they will have different private ip iphones
+this solves the problem since um ipgs's local ip addresses can be shared between
+devices then we can have more than three uh 4.3
+billion devices with only ipv4 address
+another solution is to use ipv6 well ipv6 is basically you can think of
+it as an extension of ipv4
+um it has 128 bits so it's much wider than ipv4
+and we we can assign ipv6 addresses to uh not only every
+every people every person … but we can assign
+uh those exercises even to each particle of sand
+in the world so that's basically a lot of ip addresses that is not going
+to be used up in some like a couple of years
+or a couple of decades or a couple of centuries probably … um okay so
+this is the ipitrust … um however we want to group ip address so that we
+can manage them easily for example lcf has a lot of computers
+right each of them has an ip address if we
+just assign ip addresses randomly then it's really easy to just mess them
+up then the concept of subnet is really useful
+so we we use the cdl format to manage a subnet or a range of ip address
+so cdr stands for careless inter-domain routing
+and it's basically a ip address with a slash
+and a number so this this number is called mask
+so um in this example in this cdr example
+uh let's point to it pointer in this cdr example uh the mask is 24.
+so um after transforming this
+ip address into the binary format as shown here
+we take the first 24 bits and label it as a green color
+and the eight bits here will give it a red color
+um for the part of five pages in the green color part
+they should be the same if uh the computers are in the sub same sub
+network uh the eight bits well they can differ
+so um with this cdr if we have a ip address of one
+192.168.1.100 after transforming it into a binary form
+like this one we need to compare the first 24 bits
+well as you can see they are the same so this type address is in the same subnet
+as this cedar um let's
+uh go through any an example um suppose that we have a subnet of
+12.4.0.1 15. … and we want to
+um see whether whether uh this ip address let's see the
+network the 12.5.4.1 stuff
+we will need to first convert this ip address
+into a binary form so this uh this row is the binary form of the
+above ipo address and then we need to take the mask
+by uh labeling the first 15 bits to be one
+so these 15 bits are within our consideration
+but those bits after the 15 bits are not we can just discard
+those bits and set them as zero
+um so um it's told that 5.4. the one in the same network let's see so um the
+difference between this type of address and this ipad
+address is basically
+the second byte and the third bite but because the third byte is not
+what we want to consider which is this garden
+so then we have the second bite so this is a a5 converted into binary
+it's uh 101 so here the 100 should be changed to
+one 101 well because uh this bit
+the last one 101 or one or zero this is zero or what is not what we are
+considering about we will just discard this bit and then
+we need to compare because the 100 and 101
+share these uh two bits the one and zero
+the uh this ip address has the same 15 bits as
+this ip address so it's basically um … in the sub same subnet
+so yes … so well what about this one what about this side futurist
+is it in the same sub-network
+well actually not because um when we convert
+6 into binary form it's 1-1-0 and we will copy the 1-1-0 to here the
+the last 0 needs to be discarded and the 1 1 corresponds to these two bytes
+however uh this the green part the the subnet ip address that we need
+to compare well it has a 1 0 here instead of a 1 1
+so that doesn't work so this type of address is in the
+different network uh than what this cdr specifies
+if you think this is too fast feel free to ask questions
+during live lab sessions
+so no this is not in the same network okay so um this part is
+fairly complicated i mean the routing part um
+if i go too fast in this part feel free to pause the video for a minute to think
+about how routing works so let's get started
+so um after we have an ip address for example i want to visit my server
+and i have the service ip address how do we get from the ocf server
+to my server … how do we how do we get to the how do we get to my
+server from the ocf server … we need to jump between
+networks using a table called routing table
+so the routing table specifies a subnet and how the subnet
+is going to be reached … so let's go through
+an example which will illustrate this concept
+um so supposedly we're on medcal and this is the the math house ip
+address and we want to go to my server so this ip address
+so let's see so my service ip starts with
+157. … so well it's 157 in this cdr that's not because it starts with
+169 and the cdr has 24 bits so
+it's not so it's not in our local network
+then it's um it should be this one because this c dart has a slash zero
+which means for every iphs we will assign it to um
+to this form except uh the rule that has higher priority for example
+this one because 157 doesn't match this rule we
+will go through this rule and you will be sent to uh 169
+to 29 to 226.1 … so basically this uh in this cedar subnet
+and uh in the ocf router like this ip in the ocf router we will
+go through uh another for another lookup in
+another routing table well because my my server starts with 157 it doesn't
+match any of these so it will go to this rule
+and then it will be sent to another router so
+this process will just go on until we reach my server
+or we fail to reach my server and you will get a timeout
+so that's basically how routing works again if you think i go too fast in this
+part feel free to pause the video for a minute to
+think about it … or ask questions in uh live sessions
+so yeah um so right now we are able to connect to
+a computer far away that's really great however
+the network is probably not so reliable and
+a packet may be lost when it's when it is transported from
+one computer to another well that's not a good idea because
+suppose that you're loading a website and well probably um
+when the host sorry when the server is sending you
+the text a part of the text can be lost or corrupted
+that's not where we want to see how do we solve the problem … we will use
+something called tcp transmission control protocol
+well tcp uh gets us more reliability although with
+potentially more latency and complexity … so it's not always useful
+but useful for some circumstances such as visiting websites
+you absolutely don't want to see um corrupted text
+when you when you visit a website right so that's why
+websites which uses http or https protocols
+they would use transmission control protocol tcp
+under the hood however sometimes well time is just more
+important than reliability well for example while you attend
+a live lecture using zoom [Music]
+the packet loss may not be a really serious
+consideration because even if the packet is corrupted
+or even lost you can still view the video it's well it's just a
+little bit noisy or … a little bit blurry or something like
+that but it was continued to work however if you have a
+really long latency like for example for example five
+seconds it would be a really worst case right so um for these use
+cases you probably don't want to use tcp
+instead you could try udp will not cover udp
+uh in this lecture but you can look it up
+um another protocol is icmp which which is uses which is used by
+ping we'll introduce the pin command later in
+this lecture
+well yes we're we're now able to transmit
+complete information from a server to another server
+reliably but wait what if i want to visit
+wikipedia.org … i i just don't know wikipedia's ip address
+how do we do that how do i look up the service ip address because
+it's really complicated to memorize i just don't want to memorize it
+then we would use dns which is domain name system
+well dns has you can think of it as a notebook it has
+several records so while you visit wikipedia.org
+you're basically looking up this table for uh the record for ip address
+so uh take wikipedia as an example if you're looking for the ip address of
+this website … the dns server will tell you
+the final ip address and then you've got the ip address you can use tcp to visit
+it and what's more is that uh you not only
+have to use ipv4 … and ipv6
+you can even point the domain to another domain
+by adding another kind of record so the record for assigning
+assigning a domain to an ipv4 address is called the a record and
+if you want to assign a domain to a ipv6 address you will use aaa record
+if you want to point for example wikipedia.org to www.wikipedia.org
+because it's probably easier to manage you'll probably use
+cname record … and another important type of record is the mx record
+you could … designate like specify the mail servers uh
+that this domain uses for example if you are a leader of a group at uc
+berkeley and you want to enable your own uh email
+under a berkeley sub domain for example ocf.berkeley.edu
+you need to request to add an mx record to
+enable this kind of service there are even
+other types of records you can look them up
+online it's really fun to read okay it's um it's the system admin time
+after um all those concepts let's see um so we have
+uh several tools that i'm gonna introduce today however
+i'm gonna do the demo live um during the the laptime so that you'll be
+able to ask questions … um let's see
+um the first command is uh is the hostname command
+well if you type hostname you can display the
+the current host basically the hostname name
+the host is just computer you can think of
+a hostname the name of your own computer if you type hostname it will return
+the simplified hostname by default however if you want to carry
+the full qualified domain name fqtn you will use
+fqdn as a flag and you will return the full domain name here
+and then host well hostname is for getting your own hostname
+what if you want to get information about other hosts
+you would type host and then another domain name or ip address
+and then ping well ping is a really easy way to
+make sure that you'll be able to access another
+computer or host or server from your computer
+so when you type ping and put in domain name or ip address you will see
+whether the server is accessible from
+your own computer well in this case um ocf can be visited from this server
+in four milliseconds which is pretty fast
+and trace route um you could use tracer to
+print the route the packet takes in order to reach the destination
+um so this shows the the path uh from a server to
+google.com
+and yeah it's a it's a lot of berkeley routers and then some other
+routers here i recommend you to try this one on your
+own because it will be really interesting to see
+how many routers you will need to use before accessing a website
+and then the arp command um you can do you can use arp command to
+uh get the mac address associated with an ip address
+and traceroute um
+sorry and the date command um dig is the utility to look up
+a dns uh basically if you wanna look up an ip from a domain name
+just like uh the example that i gave you with
+uh wikipedia you would type dick wikipedia.org
+and then in the answer section you will see you will see
+so here we have an a so a basically means the ipv4
+and then we get ipv4 address um from this command
+and the last command the double get our crl
+this is basically two commands so you can use this command to download content
+from um web or just display contents so here i use clio to display the
+content of our lab as you can see it's in the
+markdown format and here is um the lab
+i add a head here to get the first 10 lines of the lab
+so yeah so that's it and that's basically everything that i want to
+cover today and thanks for attending this web
+lecture have a great day
