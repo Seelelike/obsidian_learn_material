@@ -15,11 +15,7 @@ Advanced 10 - Virtualization, C…
 之前的课说过：
 
 *   当你有**很多服务器**的时候，「有机器随时坏掉」是常态，不是意外。
-    
-    Advanced 10 - Virtualization, C…
-    
 *   配置管理可以帮你**自动把一堆新机器装好环境**，省得一台台手动搞。
-    
 
 但还有个更难的问题：
 
@@ -35,8 +31,6 @@ Advanced 10 - Virtualization, C…
     
 
 **要做到这种「无缝切换」，就需要：容器 + 容器编排 + 分布式架构。**
-
-Advanced 10 - Virtualization, C…
 
 二、虚拟机：在电脑里再装一台电脑
 ----------------

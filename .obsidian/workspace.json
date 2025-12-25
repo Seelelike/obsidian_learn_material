@@ -8,33 +8,69 @@
         "type": "tabs",
         "children": [
           {
-            "id": "3db21995a5e36d2b",
-            "type": "leaf",
-            "state": {
-              "type": "pdf",
-              "state": {
-                "file": "Linux/Sysadmin DeCal/PPT/Advanced 8 - Config Management - FA20.pdf"
-              },
-              "icon": "lucide-file-text",
-              "title": "Advanced 8 - Config Management - FA20"
-            }
-          },
-          {
-            "id": "42658701ecaab452",
+            "id": "2c34ea38ccb44a97",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2025-12-10.md",
+                "file": "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.10-should-one-use-hll-for-a-new-kernel.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2025-12-10"
+              "title": "20.10-should-one-use-hll-for-a-new-kernel"
+            }
+          },
+          {
+            "id": "13ef3a69e89a881e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "6.S081/mit6-s081/lec21-networking-robert/21.9-ru-he-jie-jue-livelock.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "21.9-ru-he-jie-jue-livelock"
+            }
+          },
+          {
+            "id": "4522bc12c63dff03",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "6.S081/mit6-s081/lec22-meltdown-robert/22.1-meltdown-fa-sheng-de-bei-jing.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "22.1-meltdown-fa-sheng-de-bei-jing"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
+      },
+      {
+        "id": "7989a83746a729f2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f5013df58cd95cf4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "6.S081/mit6-s081/lec21-networking-robert/21.3二三层地址转换ARP.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "21.3二三层地址转换ARP"
+            }
+          }
+        ]
       }
     ],
     "direction": "vertical"
@@ -54,7 +90,7 @@
               "type": "search",
               "state": {
                 "query": "",
-                "matchingCase": false,
+                "matchingCase": true,
                 "explainSearch": false,
                 "collapseAll": false,
                 "extraContext": false,
@@ -92,7 +128,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 312.5
   },
   "right": {
     "id": "d99def764e9cce6f",
@@ -156,13 +192,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux/Shell/Shell 基本运算符.md",
+                "file": "6.S081/mit6-s081/lec22-meltdown-robert/22.1-meltdown-fa-sheng-de-bei-jing.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Shell 基本运算符 的大纲"
+              "title": "22.1-meltdown-fa-sheng-de-bei-jing 的大纲"
             }
           },
           {
@@ -180,8 +216,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 233.5,
-    "collapsed": true
+    "width": 233.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -197,20 +232,31 @@
       "obsidian-hypothesis-plugin:Sync your hypothesis highlights": false
     }
   },
-  "active": "42658701ecaab452",
+  "active": "4522bc12c63dff03",
   "lastOpenFiles": [
-    "Linux/Sysadmin DeCal/PPT/Advanced 10.md",
-    "2025-12-10.md",
-    "Linux/Sysadmin DeCal/PPT/Advanced 9.md",
-    "Linux/Sysadmin DeCal/PPT/Advanced 10 - Virtualization, Containers, Dist. Arch.pdf",
-    "Linux/Sysadmin DeCal/Decal后学习建议.md",
-    "Linux/Sysadmin DeCal/PPT/Advanced 9 - Security.pdf",
-    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.1-c-yu-yan-shi-xian-cao-zuo-xi-tong-de-you-lie-shi.md",
-    "未命名.md",
-    "未命名 3.md",
+    "6.S081/mit6-s081/lec21-networking-robert/21.3二三层地址转换ARP.md",
+    "6.S081/mit6-s081/lec22-meltdown-robert/22.1-meltdown-fa-sheng-de-bei-jing.md",
+    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/biscuit.pdf",
+    "6.S081/mit6-s081/lec21-networking-robert/mogul96usenix.pdf",
+    "6.S081/mit6-s081/lec22-meltdown-robert/22.2-speculative-execution-1.md",
+    "6.S081/mit6-s081/lec22-meltdown-robert/22.7-meltdown-fix.md",
+    "6.S081/mit6-s081/lec22-meltdown-robert/22.6-meltdown-attack.md",
+    "6.S081/mit6-s081/lec22-meltdown-robert/22.5-flush-and-reload.md",
+    "6.S081/mit6-s081/lec22-meltdown-robert/22.4-cpu-caches.md",
+    "6.S081/mit6-s081/lec22-meltdown-robert/22.3-speculative-execution-2.md",
     "未命名 1.md",
-    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.2-gao-ji-bian-cheng-yu-yan-shi-xian-cao-zuo-xi-tong-de-you-lie-shi.md",
-    "mit6-s081/lec21-networking-robert.md",
+    "6.S081/mit6-s081/lec22-meltdown-robert",
+    "6.S081/mit6-s081/lec21-networking-robert/21.9-ru-he-jie-jue-livelock.md",
+    "6.S081/mit6-s081/lec21-networking-robert/21.8-receive-livelock.md",
+    "6.S081/mit6-s081/lec21-networking-robert/21.7-ring-buffer.md",
+    "6.S081/mit6-s081/lec21-networking-robert/21.6-wang-lu-xie-yi-zhan-network-stack.md",
+    "6.S081/mit6-s081/lec21-networking-robert/21.5-si-ceng-wang-luo-udp.md",
+    "6.S081/mit6-s081/lec21-networking-robert/21.4-san-ceng-wang-luo-internet.md",
+    "6.S081/mit6-s081/lec21-networking-robert/21.2-er-ceng-wang-luo-ethernet.md",
+    "6.S081/mit6-s081/lec21-networking-robert/21.1-ji-suan-ji-wang-luo-gai-shu.md",
+    "未命名.md",
+    "6.S081/mit6-s081/lec21-networking-robert",
+    "mit6-s081",
     "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.10-should-one-use-hll-for-a-new-kernel.md",
     "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.9-evaluation-hll-performance-cost-2.md",
     "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.8-evaluation-hll-performance-cost-1.md",
@@ -218,33 +264,21 @@
     "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.6-heap-exhaustion-solution.md",
     "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.5-heap-exhaustion.md",
     "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.4-biscuit.md",
-    "6.S081/mit6-s081/lec20-kernels-and-hll-frans/20.3-choose-golang.md",
-    "6.S081/mit6-s081/lec20-kernels-and-hll-frans",
-    "mit6-s081",
-    "Linux/Sysadmin DeCal/PPT/Advanced 8 - Config Management - FA20.pdf",
-    "6.S081/biscuit.pdf",
-    "6.S081/biscuit.pdf.crdownload",
-    "Linux/Sysadmin DeCal/lab/lab7.md",
-    "Linux/Sysadmin DeCal/lab/lab3.md",
-    "6.S081/mit6-s081/lec19-virtual-machines-robert/19.7-dune.md",
-    "6.S081/mit6-s081/lec19-virtual-machines-robert/虚拟机.md",
-    "6.S081/mit6-s081/lec19-virtual-machines-robert/19.6-ying-jian-dui-xu-ni-ji-de-zhi-chi.md",
-    "6.S081/mit6-s081/lec19-virtual-machines-robert/19.5-trap-and-emulate-devices.md",
-    "6.S081/mit6-s081/lec19-virtual-machines-robert/19.4-trap-and-emulate-page-table.md",
-    "6.S081/mit6-s081/lec19-virtual-machines-robert/picture/Pasted image 20251210111212.png",
-    "6.S081/mit6-s081/lec19-virtual-machines-robert/19.3-trap-and-emulate-emulate.md",
-    "6.S081/mit6-s081/lec19-virtual-machines-robert/picture/Pasted image 20251210105536.png",
-    "6.S081/mit6-s081/lec19-virtual-machines-robert/picture",
-    "6.S081/mit6-s081/lec19-virtual-machines-robert",
-    "6.S081/belay-dune.pdf",
-    "Linux/Sysadmin DeCal/PPT/picture/Pasted image 20251202160508.png",
-    "Pasted image 20251113184641.png",
-    "Pasted image 20251106204319.png",
-    "Pasted image 20251106204248.png",
-    "Pasted image 20251113185738.png",
-    "Pasted image 20251113190201.png",
-    "Pasted image 20251119152002.png",
-    "Pasted image 20251119152601.png",
+    "Linux/picture/Pasted image 20251224155157.png",
+    "Linux/picture",
+    "Linux/Linux指令",
+    "计组/picture/Pasted image 20251220172220.png",
+    "计组/picture/Pasted image 20251220172148.png",
+    "计组/picture/Pasted image 20251220172122.png",
+    "计组/picture/Pasted image 20251220171115.png",
+    "计组/picture/Pasted image 20251220170922.png",
+    "计组/picture/Pasted image 20251220164137.png",
+    "计组/picture/Pasted image 20251220162003.png",
+    "计组/picture/Pasted image 20251220160108.png",
+    "计组/picture/Pasted image 20251220160044.png",
+    "计组/picture",
+    "计组",
+    "CS61c",
     "ML/未命名.canvas"
   ]
 }
